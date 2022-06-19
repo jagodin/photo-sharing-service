@@ -14,9 +14,10 @@ datasource db {
 model User {
   name            String
   email           String
-  updatedAt       Date @updatedAt
-  createdAt       Date @default(now())
   lastLogin       Date
   followers       User[]
   following       User[]
+  profilePicture  String?
+  updatedAt       Date @updatedAt
+  createdAt       Date @default(now())
 }

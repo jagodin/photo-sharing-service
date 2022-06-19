@@ -1,7 +1,7 @@
 {
   "files.exclude": {
     "**/.cache": true,
-    // "**/build": true,
+    "**/build": true,
     "**/node_modules": true
   },
   "search.exclude": {

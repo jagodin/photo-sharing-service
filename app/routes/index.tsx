@@ -1,7 +1,9 @@
+import { AppLayout } from '~/components/AppLayout';
+
 export default function Index() {
   return (
-    <div>
+    <AppLayout>
       <h1>Photo Sharing Service</h1>
-    </div>
+    </AppLayout>
   );
 }
