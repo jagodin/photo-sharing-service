@@ -1,0 +1,22 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["rhel-openssl-1.0.x", "native"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  name            String
+  email           String
+  updatedAt       Date @updatedAt
+  createdAt       Date @default(now())
+  lastLogin       Date
+  followers       User[]
+  following       User[]
+}

@@ -1,0 +1,14 @@
+{
+  "files.exclude": {
+    "**/.cache": true,
+    // "**/build": true,
+    "**/node_modules": true
+  },
+  "search.exclude": {
+    "**/yarn.lock": true,
+    "**/server": true
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.codeActionsOnSave": ["source.fixAll.eslint"]
+}
