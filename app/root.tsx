@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from 'react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import type { LinksFunction, MetaFunction } from '@remix-run/node';
 import {
   Links,
@@ -19,11 +20,15 @@ export const meta: MetaFunction = () => ({
   viewport: 'width=device-width,initial-scale=1',
 });
 
+const theme = createTheme();
+
 export default function App() {
   return (
-    <Document>
-      <Outlet />
-    </Document>
+    <ThemeProvider theme={theme}>
+      <Document>
+        <Outlet />
+      </Document>
+    </ThemeProvider>
   );
 }
 
