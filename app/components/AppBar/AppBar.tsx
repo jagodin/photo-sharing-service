@@ -5,6 +5,7 @@ import {
   Search as SearchIcon,
 } from '@mui/icons-material';
 import type { SxProps, Theme } from '@mui/material';
+import { Stack } from '@mui/material';
 import { Box } from '@mui/material';
 import {
   alpha,
@@ -18,6 +19,7 @@ import {
   Toolbar,
   Tooltip,
 } from '@mui/material';
+import { useNavigate } from '@remix-run/react';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -52,9 +54,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      width: '20ch',
+      width: '26ch',
       '&:focus': {
-        width: '30ch',
+        width: '34ch',
       },
     },
   },
@@ -65,6 +67,8 @@ const iconStyle: SxProps<Theme> = {
 };
 
 export const AppBar = () => {
+  const navigate = useNavigate();
+
   return (
     <MuiAppBar color="default" position="static">
       <Container sx={{ padding: '0px !important' }} maxWidth="lg">
@@ -85,24 +89,26 @@ export const AppBar = () => {
                 />
               </Search>
             </Box>
-            <Grid item>
-              <IconButton>
-                <Home sx={iconStyle} />
-              </IconButton>
-
-              <IconButton sx={{ ml: 1 }}>
-                <AddAPhoto sx={iconStyle} />
-              </IconButton>
-
-              <IconButton sx={{ ml: 1 }}>
-                <Favorite sx={iconStyle} />
-              </IconButton>
-
-              <Tooltip title="Profile">
-                <IconButton sx={{ ml: 1 }}>
-                  <Avatar sx={{ height: 24, width: 24 }} />
+            <Grid item xs={12} sm={'auto'}>
+              <Stack direction="row" spacing={1} justifyContent="end">
+                <IconButton onClick={() => navigate('/')}>
+                  <Home sx={iconStyle} />
                 </IconButton>
-              </Tooltip>
+
+                <IconButton onClick={() => navigate('/create')}>
+                  <AddAPhoto sx={iconStyle} />
+                </IconButton>
+
+                <IconButton>
+                  <Favorite sx={iconStyle} />
+                </IconButton>
+
+                <Tooltip title="Profile">
+                  <IconButton>
+                    <Avatar sx={{ height: 24, width: 24 }} />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
             </Grid>
           </Grid>
         </Toolbar>

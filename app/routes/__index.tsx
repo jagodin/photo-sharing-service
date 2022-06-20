@@ -1,3 +1,4 @@
+import { Outlet } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/server-runtime';
 
 import { AppLayout } from '~/components/AppLayout';
@@ -10,7 +11,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Index() {
   return (
     <AppLayout>
-      <h1>Photo Sharing Service</h1>
+      <Outlet />
     </AppLayout>
   );
 }
