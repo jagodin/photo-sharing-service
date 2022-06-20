@@ -5,6 +5,7 @@ import {
   Search as SearchIcon,
 } from '@mui/icons-material';
 import type { SxProps, Theme } from '@mui/material';
+import { Box } from '@mui/material';
 import {
   alpha,
   AppBar as MuiAppBar,
@@ -69,7 +70,11 @@ export const AppBar = () => {
       <Container sx={{ padding: '0px !important' }} maxWidth="lg">
         <Toolbar>
           <Grid container justifyContent="space-between" alignItems="center">
-            <Grid item>
+            <Box
+              component={Grid}
+              item
+              display={{ xs: 'none', sm: 'block', md: 'block', lg: 'block' }}
+            >
               <Search>
                 <SearchIconWrapper>
                   <SearchIcon />
@@ -79,7 +84,7 @@ export const AppBar = () => {
                   inputProps={{ 'aria-label': 'search' }}
                 />
               </Search>
-            </Grid>
+            </Box>
             <Grid item>
               <IconButton>
                 <Home sx={iconStyle} />
