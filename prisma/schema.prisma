@@ -4,6 +4,7 @@
 generator client {
   provider = "prisma-client-js"
   binaryTargets = ["rhel-openssl-1.0.x", "native"]
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -16,12 +17,13 @@ model User {
   name            String
   email           String @unique
   password        String
-  lastLogin       DateTime
+  lastLogin       DateTime?
   followers       Follows[] @relation("follower")
   following       Follows[] @relation("following")
   profilePicture  String?
   updatedAt       DateTime @updatedAt
   createdAt       DateTime @default(now())
+  posts           Post[]
 }
 
 model Follows {
@@ -31,4 +33,20 @@ model Follows {
   followingId Int
 
   @@id([followerId, followingId])
+}
+
+enum PostType {
+  PICTURE
+  VIDEO
+}
+
+model Post {
+  postId        Int @id @default(autoincrement())
+  description   String?
+  author        User @relation(fields: [authorId], references: [userId])
+  authorId      Int
+  type          PostType
+  url           String
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
 }

@@ -5,7 +5,7 @@ import { AppLayout } from '~/components/AppLayout';
 import { authenticateUser } from '~/services/auth.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  return authenticateUser(request);
+  return await authenticateUser(request);
 };
 
 export default function Index() {
