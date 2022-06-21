@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { AddComment, Favorite, MoreVert, Send } from '@mui/icons-material';
 import {
   Avatar,
@@ -7,6 +8,7 @@ import {
   CardHeader,
   CardMedia,
   IconButton,
+  Skeleton,
   Stack,
   Tooltip,
   Typography,
@@ -19,6 +21,20 @@ interface PostProps {
   };
 }
 export const Post = ({ post }: PostProps) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [image, setImage] = useState<HTMLImageElement | null>(null);
+
+  const handleImageLoaded = () => {
+    setImageLoaded(true);
+  };
+
+  useEffect(() => {
+    const image = new Image();
+    image.onload = handleImageLoaded;
+    image.src = post.url;
+    setImage(image);
+  }, [post.url]);
+
   return (
     <Card>
       <CardHeader
@@ -34,11 +50,16 @@ export const Post = ({ post }: PostProps) => {
           </IconButton>
         }
       />
-      <CardMedia
-        component="img"
-        image={post.url}
-        alt={post.description || 'unknown'}
-      />
+      {imageLoaded ? (
+        <CardMedia
+          component="img"
+          image={image?.src}
+          alt={post.description || 'unknown'}
+        />
+      ) : (
+        <Skeleton height={500} animation="wave" variant="rectangular" />
+      )}
+
       <CardActions>
         <Stack direction="row" spacing={1}>
           <Tooltip title="Favorite">
