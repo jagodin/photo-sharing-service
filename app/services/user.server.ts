@@ -26,6 +26,7 @@ interface RegisterOptions {
   password: string;
   firstName: string;
   lastName: string;
+  username: string;
 }
 
 export const register = async ({
@@ -33,6 +34,7 @@ export const register = async ({
   password,
   firstName,
   lastName,
+  username,
 }: RegisterOptions) => {
   const user = await db.user.findUnique({ where: { email } });
 
@@ -46,6 +48,7 @@ export const register = async ({
     name: firstName + ' ' + lastName,
     email,
     password,
+    username,
     lastLogin: new Date(),
   };
 

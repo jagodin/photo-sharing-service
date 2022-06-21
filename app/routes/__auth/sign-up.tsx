@@ -25,8 +25,9 @@ export const action: ActionFunction = async ({ request }) => {
   const password = formData.get('password') as string;
   const firstName = formData.get('firstName') as string;
   const lastName = formData.get('lastName') as string;
+  const username = formData.get('username') as string;
 
-  await register({ email, password, firstName, lastName });
+  await register({ email, password, firstName, lastName, username });
 
   return await authenticator.authenticate('form', request, {
     successRedirect: '/',
@@ -88,6 +89,16 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
               />
             </Grid>
             <Grid item xs={12}>

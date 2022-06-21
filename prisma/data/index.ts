@@ -15,6 +15,8 @@ export const createUsers: () => Promise<
       return {
         name: faker.name.findName(),
         email: faker.internet.email(),
+        profilePicture: faker.image.avatar(),
+        username: faker.internet.userName(),
         password,
       };
     });
