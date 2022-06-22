@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardMedia,
   IconButton,
+  Link,
   Skeleton,
   Stack,
   Tooltip,
@@ -32,6 +33,7 @@ export const Post = ({ post }: PostProps) => {
     const image = new Image();
     image.onload = handleImageLoaded;
     image.src = post.url;
+    console.log(image.src);
     setImage(image);
   }, [post.url]);
 
@@ -40,9 +42,16 @@ export const Post = ({ post }: PostProps) => {
       <CardHeader
         avatar={<Avatar src={post.author.profilePicture || undefined} />}
         title={
-          <Typography variant="body1" sx={{ fontWeight: 600 }}>
-            {post.author.username}
-          </Typography>
+          <Link
+            underline="none"
+            style={{ textDecoration: 'none' }}
+            href={post.author.username}
+            color={(theme) => theme.palette.text.primary}
+          >
+            <Typography variant="body1" sx={{ fontWeight: 600 }}>
+              {post.author.username}
+            </Typography>
+          </Link>
         }
         action={
           <IconButton aria-label="settings">

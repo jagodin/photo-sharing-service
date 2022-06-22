@@ -70,8 +70,8 @@ export const AppBar = () => {
   const navigate = useNavigate();
 
   return (
-    <MuiAppBar color="default" position="static">
-      <Container sx={{ padding: '0px !important' }} maxWidth="lg">
+    <MuiAppBar sx={{ mb: 3 }} color="default" position="static">
+      <Container sx={{ padding: '0px !important' }} maxWidth="md">
         <Toolbar>
           <Grid container justifyContent="space-between" alignItems="center">
             <Box

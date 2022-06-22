@@ -12,12 +12,15 @@ export const createUsers: () => Promise<
   return Array(10)
     .fill(0)
     .map((_) => {
+      const firstName = faker.name.firstName();
+      const lastName = faker.name.lastName();
       return {
-        name: faker.name.findName(),
+        name: firstName + ' ' + lastName,
         email: faker.internet.email(),
         profilePicture: faker.image.avatar(),
-        username: faker.internet.userName(),
+        username: faker.internet.userName(firstName, lastName),
         password,
+        profileDescription: faker.lorem.sentence(),
       };
     });
 };

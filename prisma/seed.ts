@@ -26,6 +26,7 @@ const seed = async () => {
 
 const clearData = async () => {
   await prisma.$transaction([
+    prisma.follows.deleteMany(),
     prisma.post.deleteMany(),
     prisma.user.deleteMany(),
   ]);

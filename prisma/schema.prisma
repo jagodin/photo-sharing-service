@@ -13,18 +13,19 @@ datasource db {
 }
 
 model User {
-  userId          Int @id @default(autoincrement())
-  username        String @unique
-  name            String
-  email           String @unique
-  password        String
-  lastLogin       DateTime?
-  followers       Follows[] @relation("follower")
-  following       Follows[] @relation("following")
-  profilePicture  String?
-  updatedAt       DateTime @updatedAt
-  createdAt       DateTime @default(now())
-  posts           Post[]
+  userId              Int @id @default(autoincrement())
+  username            String @unique
+  name                String
+  email               String @unique
+  password            String
+  lastLogin           DateTime?
+  followers           Follows[] @relation("follower")
+  following           Follows[] @relation("following")
+  profilePicture      String?
+  updatedAt           DateTime @updatedAt
+  createdAt           DateTime @default(now())
+  posts               Post[]
+  profileDescription  String?
 }
 
 model Follows {

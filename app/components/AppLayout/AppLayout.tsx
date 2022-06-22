@@ -7,7 +7,7 @@ export const AppLayout = ({ children }: PropsWithChildren<unknown>) => {
   return (
     <Box>
       <AppBar />
-      <Container maxWidth="lg">{children}</Container>
+      <Container maxWidth="md">{children}</Container>
     </Box>
   );
 };
