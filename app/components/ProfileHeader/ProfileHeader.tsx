@@ -1,10 +1,12 @@
 import { MoreHoriz, Settings } from '@mui/icons-material';
+import type { AvatarProps } from '@mui/material';
 import {
-  Avatar,
+  Avatar as MuiAvatar,
   Button,
   Grid,
   IconButton,
   Stack,
+  styled,
   Typography,
 } from '@mui/material';
 import type { User } from '@prisma/client';
@@ -25,6 +27,19 @@ interface ProfileHeaderProps {
   currentUser: Omit<User, 'password'>;
 }
 
+const Avatar = styled((props: AvatarProps) => <MuiAvatar {...props} />)(
+  ({ theme }) => ({
+    [theme.breakpoints.up('sm')]: {
+      width: 140,
+      height: 140,
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: 80,
+      height: 80,
+    },
+  })
+);
+
 export const ProfileHeader = ({
   user,
   currentUserFollowing,
@@ -33,13 +48,10 @@ export const ProfileHeader = ({
   const currentUserProfile = currentUser.username == user.username;
   return (
     <Grid container alignItems="center" spacing={4}>
-      <Grid item xs={2}>
-        <Avatar
-          sx={{ width: 'auto', height: 'auto', fontSize: 140 }}
-          src={user.profilePicture || undefined}
-        />
+      <Grid item xs={12} sm={3}>
+        <Avatar src={user.profilePicture || undefined} />
       </Grid>
-      <Grid rowGap={2} container item xs={10} direction="column">
+      <Grid rowGap={2} xs={12} sm={9} container item direction="column">
         <Stack spacing={3} alignItems="center" direction="row">
           <Typography variant="h5">{user.username}</Typography>
           {!currentUserProfile &&
