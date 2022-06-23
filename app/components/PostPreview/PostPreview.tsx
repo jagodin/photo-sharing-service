@@ -1,5 +1,4 @@
-import { Comment, Favorite } from '@mui/icons-material';
-import { Card, CardMedia, Skeleton, Typography } from '@mui/material';
+import { Card, CardMedia, Skeleton } from '@mui/material';
 import type { Post } from '@prisma/client';
 
 import { useLoadImage } from '~/hooks/useLoadImage';
