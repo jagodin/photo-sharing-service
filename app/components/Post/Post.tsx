@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { AddComment, Favorite, MoreVert, Send } from '@mui/icons-material';
 import {
   Avatar,
@@ -16,26 +15,15 @@ import {
 } from '@mui/material';
 import type { Post as PostModal, User } from '@prisma/client';
 
+import { useLoadImage } from '~/hooks/useLoadImage';
+
 interface PostProps {
   post: PostModal & {
     author: User;
   };
 }
 export const Post = ({ post }: PostProps) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [image, setImage] = useState<HTMLImageElement | null>(null);
-
-  const handleImageLoaded = () => {
-    setImageLoaded(true);
-  };
-
-  useEffect(() => {
-    const image = new Image();
-    image.onload = handleImageLoaded;
-    image.src = post.url;
-    console.log(image.src);
-    setImage(image);
-  }, [post.url]);
+  const { imageLoaded, image } = useLoadImage(post.url);
 
   return (
     <Card>

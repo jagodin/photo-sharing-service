@@ -1,14 +1,16 @@
 import { Divider, Grid } from '@mui/material';
-import type { User } from '@prisma/client';
+import type { Post, User } from '@prisma/client';
 import { useLoaderData } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/server-runtime';
 import { json } from '@remix-run/server-runtime';
 import _ from 'lodash';
 
+import { ProfileFeed } from '~/components/ProfileFeed';
 import { ProfileHeader } from '~/components/ProfileHeader';
 import { authenticateUser } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import { userFollowsUser } from '~/services/follow.server';
+import { getUsersPosts } from '~/services/posts.server';
 
 interface LoaderData {
   user: Omit<
@@ -23,6 +25,9 @@ interface LoaderData {
   >;
   currentUserFollowing: boolean;
   currentUser: Omit<User, 'password'>;
+  posts: (Post & {
+    author: User;
+  })[];
 }
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -47,12 +52,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     user: _.omit(user, 'password'),
     currentUserFollowing: await userFollowsUser(currentUser, user),
     currentUser,
+    posts: await getUsersPosts(user.username),
   };
   return json(data);
 };
 
 export default function Profile() {
-  const { user, currentUserFollowing, currentUser } =
+  const { user, currentUserFollowing, currentUser, posts } =
     useLoaderData<LoaderData>();
 
   return (
@@ -66,6 +72,9 @@ export default function Profile() {
       </Grid>
       <Grid item xs={12}>
         <Divider flexItem />
+      </Grid>
+      <Grid item xs={12}>
+        <ProfileFeed posts={posts} />
       </Grid>
     </Grid>
   );

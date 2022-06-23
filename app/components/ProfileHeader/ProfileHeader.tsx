@@ -34,8 +34,8 @@ const Avatar = styled((props: AvatarProps) => <MuiAvatar {...props} />)(
       height: 140,
     },
     [theme.breakpoints.down('sm')]: {
-      width: 80,
-      height: 80,
+      width: 100,
+      height: 100,
     },
   })
 );
