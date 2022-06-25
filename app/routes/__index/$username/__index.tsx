@@ -1,6 +1,6 @@
 import { Divider, Grid } from '@mui/material';
 import type { Post, User } from '@prisma/client';
-import { useLoaderData } from '@remix-run/react';
+import { Outlet, useLoaderData } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/server-runtime';
 import { json } from '@remix-run/server-runtime';
 import _ from 'lodash';
@@ -63,6 +63,7 @@ export default function Profile() {
 
   return (
     <Grid container spacing={4}>
+      <Outlet />
       <Grid item xs={12}>
         <ProfileHeader
           currentUser={currentUser}
