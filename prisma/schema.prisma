@@ -25,6 +25,7 @@ model User {
   updatedAt           DateTime @updatedAt
   createdAt           DateTime @default(now())
   posts               Post[]
+  comments            Comment[]
   profileDescription  String?
   favorites           Favorites[]
 }
@@ -51,6 +52,7 @@ model Post {
   type          PostType
   url           String
   favorites     Favorites[]
+  comments      Comment[]
   updatedAt     DateTime @updatedAt
   createdAt     DateTime @default(now())
 }
@@ -62,4 +64,15 @@ model Favorites {
   postId  Int
 
   @@id([userId, postId])
+}
+
+model Comment {
+  commentId     Int @id @default(autoincrement())
+  content       String
+  author        User @relation(fields: [authorId], references: [userId])
+  authorId      Int
+  post          Post @relation(fields: [postId], references: [postId])
+  postId        Int
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
 }

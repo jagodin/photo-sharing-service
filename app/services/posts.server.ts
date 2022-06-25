@@ -44,3 +44,20 @@ export const unlikePost = async (user: User, post: Post) =>
       },
     },
   });
+
+export const commentOnPost = async (user: User, post: Post, content: string) =>
+  await db.comment.create({
+    data: {
+      content,
+      author: {
+        connect: {
+          userId: user.userId,
+        },
+      },
+      post: {
+        connect: {
+          postId: post.postId,
+        },
+      },
+    },
+  });

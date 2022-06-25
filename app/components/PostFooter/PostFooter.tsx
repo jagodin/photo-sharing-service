@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Favorite, Send, Share } from '@mui/icons-material';
 import { Grid, IconButton, Input, Stack, Tooltip } from '@mui/material';
 import type { Favorites, Post, User } from '@prisma/client';
@@ -25,6 +26,10 @@ export const PostFooter = ({ post, currentUser }: FooterProps) => {
     ? baseUrl + '/unfavorite'
     : baseUrl + '/favorite';
 
+  useEffect(() => {
+    console.log(baseUrl + '/comment');
+  }, [baseUrl]);
+
   return (
     <Grid container sx={{ padding: (theme) => theme.spacing(1, 2) }}>
       <Stack alignItems="center" direction="row">
@@ -46,16 +51,19 @@ export const PostFooter = ({ post, currentUser }: FooterProps) => {
         />
       </Stack>
       <Grid item xs={12}>
-        <Input
-          disableUnderline
-          fullWidth
-          placeholder="Add a comment..."
-          endAdornment={
-            <IconButton>
-              <Send />
-            </IconButton>
-          }
-        />
+        <Form method="post" action={`${baseUrl}/comment`}>
+          <Input
+            disableUnderline
+            fullWidth
+            placeholder="Add a comment..."
+            endAdornment={
+              <IconButton type="submit">
+                <Send />
+              </IconButton>
+            }
+            name="comment"
+          />
+        </Form>
       </Grid>
     </Grid>
   );
