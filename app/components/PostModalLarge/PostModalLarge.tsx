@@ -7,7 +7,7 @@ import {
   Grid,
   Skeleton,
 } from '@mui/material';
-import type { Post, User } from '@prisma/client';
+import type { Favorites, Post, User } from '@prisma/client';
 
 import { Comment } from './Comment';
 import { Footer } from './Footer';
@@ -20,13 +20,18 @@ interface PostModalLargeProps {
   onClose: () => void;
   post: Post & {
     author: User;
+    favorites: (Favorites & {
+      user: User;
+    })[];
   };
+  currentUser: Omit<User, 'password'>;
 }
 
 export const PostModalLarge = ({
   open,
   onClose,
   post,
+  currentUser,
 }: PostModalLargeProps) => {
   const { imageLoaded, image } = useLoadImage(post.url);
 
@@ -75,7 +80,7 @@ export const PostModalLarge = ({
                   container
                 >
                   <Divider />
-                  <Footer post={post} />
+                  <Footer currentUser={currentUser} post={post} />
                 </Grid>
               </Grid>
             </CardContent>

@@ -26,6 +26,7 @@ model User {
   createdAt           DateTime @default(now())
   posts               Post[]
   profileDescription  String?
+  favorites           Favorites[]
 }
 
 model Follows {
@@ -49,6 +50,16 @@ model Post {
   authorId      Int
   type          PostType
   url           String
+  favorites     Favorites[]
   updatedAt     DateTime @updatedAt
   createdAt     DateTime @default(now())
+}
+
+model Favorites {
+  user    User @relation(fields: [userId], references: [userId])
+  userId  Int
+  post    Post @relation(fields: [postId], references: [postId])
+  postId  Int
+
+  @@id([userId, postId])
 }
