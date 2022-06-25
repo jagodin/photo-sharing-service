@@ -9,8 +9,9 @@ import {
 } from '@mui/material';
 import type { Favorites, Post, User } from '@prisma/client';
 
+import { PostFooter } from '../PostFooter';
+
 import { Comment } from './Comment';
-import { Footer } from './Footer';
 import { Header } from './Header';
 
 import { useLoadImage } from '~/hooks/useLoadImage';
@@ -80,7 +81,7 @@ export const PostModalLarge = ({
                   container
                 >
                   <Divider />
-                  <Footer currentUser={currentUser} post={post} />
+                  <PostFooter currentUser={currentUser} post={post} />
                 </Grid>
               </Grid>
             </CardContent>

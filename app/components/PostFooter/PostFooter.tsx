@@ -15,7 +15,7 @@ interface FooterProps {
   currentUser: Omit<User, 'password'>;
 }
 
-export const Footer = ({ post, currentUser }: FooterProps) => {
+export const PostFooter = ({ post, currentUser }: FooterProps) => {
   const postIsFavorited = post.favorites.some(
     (favorite) => favorite.user.username === currentUser.username
   );
