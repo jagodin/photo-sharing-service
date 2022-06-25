@@ -1,14 +1,9 @@
 import { Favorite, Send, Share } from '@mui/icons-material';
-import {
-  Grid,
-  IconButton,
-  Input,
-  Stack,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Grid, IconButton, Input, Stack, Tooltip } from '@mui/material';
 import type { Favorites, Post, User } from '@prisma/client';
 import { Form } from '@remix-run/react';
+
+import { LikeGroup } from '../LikeGroup';
 
 interface FooterProps {
   post: Post & {
@@ -45,9 +40,10 @@ export const Footer = ({ post, currentUser }: FooterProps) => {
             <Share />
           </IconButton>
         </Tooltip>
-        <Typography variant="subtitle1">
-          {post.favorites.length} likes
-        </Typography>
+        <LikeGroup
+          users={post.favorites.map((favorite) => favorite.user)}
+          max={3}
+        />
       </Stack>
       <Grid item xs={12}>
         <Input
