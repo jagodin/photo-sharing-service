@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { AvatarGroupProps } from '@mui/material';
 import { Tooltip } from '@mui/material';
 import { Link } from '@mui/material';
@@ -5,11 +6,14 @@ import { Typography } from '@mui/material';
 import { Avatar, AvatarGroup, Grid } from '@mui/material';
 import type { User } from '@prisma/client';
 
+import { LikesModal } from '../LikesModal';
+
 interface LikeGroupProps extends AvatarGroupProps {
   users: Omit<User, 'password'>[];
 }
 
 export const LikeGroup = ({ users, ...props }: LikeGroupProps) => {
+  const [likesModalOpen, setLikesModalOpen] = useState(false);
   const renderDescription = (users: Omit<User, 'password'>[]) => {
     if (users.length === 0) {
       return null;
@@ -45,14 +49,23 @@ export const LikeGroup = ({ users, ...props }: LikeGroupProps) => {
           <Link
             fontWeight={600}
             color="text.primary"
-            href={`/${users[0].username}`}
+            href={`#`}
             underline="hover"
+            onClick={openLikesModal}
           >
             {text}
           </Link>
         </Typography>
       );
     }
+  };
+
+  const openLikesModal = () => {
+    setLikesModalOpen(true);
+  };
+
+  const closeLikesModal = () => {
+    setLikesModalOpen(false);
   };
 
   return users.length > 0 ? (
@@ -78,6 +91,11 @@ export const LikeGroup = ({ users, ...props }: LikeGroupProps) => {
         </AvatarGroup>
       </Grid>
       <Grid item>{renderDescription(users)}</Grid>
+      <LikesModal
+        users={users}
+        open={likesModalOpen}
+        onClose={closeLikesModal}
+      />
     </Grid>
   ) : null;
 };
