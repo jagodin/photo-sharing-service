@@ -1,4 +1,4 @@
-import type { Favorites, Post, User } from '@prisma/client';
+import type { Comment, Favorites, Post, User } from '@prisma/client';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/server-runtime';
 import { json } from '@remix-run/server-runtime';
@@ -12,6 +12,9 @@ interface LoaderData {
   postId: string;
   post: Post & {
     author: User;
+    comments: (Comment & {
+      author: User;
+    })[];
     favorites: (Favorites & {
       user: User;
     })[];
@@ -28,6 +31,11 @@ export const loader: LoaderFunction = async ({ params, request }) => {
       favorites: {
         include: {
           user: true,
+        },
+      },
+      comments: {
+        include: {
+          author: true,
         },
       },
     },

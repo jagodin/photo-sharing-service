@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Favorite, Send, Share } from '@mui/icons-material';
 import { Grid, IconButton, Input, Stack, Tooltip } from '@mui/material';
 import type { Favorites, Post, User } from '@prisma/client';
@@ -25,10 +24,6 @@ export const PostFooter = ({ post, currentUser }: FooterProps) => {
   const favoriteAction = postIsFavorited
     ? baseUrl + '/unfavorite'
     : baseUrl + '/favorite';
-
-  useEffect(() => {
-    console.log(baseUrl + '/comment');
-  }, [baseUrl]);
 
   return (
     <Grid container sx={{ padding: (theme) => theme.spacing(1, 2) }}>

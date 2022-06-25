@@ -45,7 +45,11 @@ export const unlikePost = async (user: User, post: Post) =>
     },
   });
 
-export const commentOnPost = async (user: User, post: Post, content: string) =>
+export const commentOnPost = async (
+  user: Omit<User, 'password'>,
+  post: Post,
+  content: string
+) =>
   await db.comment.create({
     data: {
       content,
@@ -61,3 +65,27 @@ export const commentOnPost = async (user: User, post: Post, content: string) =>
       },
     },
   });
+
+export const deleteComment = async (
+  user: Omit<User, 'password'>,
+  commentId: number
+) => {
+  const comment = await db.comment.findUnique({ where: { commentId } });
+
+  if (!comment)
+    throw new Response(`Comment with ID ${commentId} not found.`, {
+      status: 404,
+    });
+
+  if (user.userId !== comment.authorId)
+    throw new Response(
+      `User unauthorized to delete Comment with ID ${commentId}.`,
+      { status: 401 }
+    );
+
+  await db.comment.delete({
+    where: {
+      commentId: comment.commentId,
+    },
+  });
+};

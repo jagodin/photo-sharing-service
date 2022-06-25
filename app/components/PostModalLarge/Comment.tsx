@@ -1,40 +1,106 @@
-import { Avatar, Grid, Stack, Typography } from '@mui/material';
-import type { User } from '@prisma/client';
-import { useNavigate } from '@remix-run/react';
+import { useState } from 'react';
+import { MoreVert } from '@mui/icons-material';
+import {
+  Avatar,
+  Button,
+  Dialog,
+  Grid,
+  IconButton,
+  Typography,
+} from '@mui/material';
+import type { Comment as CommentModel, Post, User } from '@prisma/client';
+import { Form, useNavigate } from '@remix-run/react';
 import moment from 'moment';
 
 interface CommentProps {
   author: User;
-  comment: string | null;
+  comment: CommentModel;
   date: Date;
+  currentUser: Omit<User, 'password'>;
+  post: Post & {
+    author: User;
+  };
 }
 
-export const Comment = ({ author, comment, date }: CommentProps) => {
+export const Comment = ({
+  author,
+  comment,
+  date,
+  currentUser,
+  post,
+}: CommentProps) => {
+  const [optionsOpen, setOptionsOpen] = useState(false);
   const navigate = useNavigate();
 
   const goToProfile = () => {
     navigate(`/${author.username}`);
   };
 
+  const openOptions = () => {
+    setOptionsOpen(true);
+  };
+
+  const closeOptions = () => {
+    setOptionsOpen(false);
+  };
+
+  const isCurrentUsersComment = currentUser.username === author.username;
+
   return (
-    <Grid container>
-      <Stack alignItems="center" spacing={2} direction="row">
+    <Grid container spacing={1} alignItems="center">
+      <Grid item xs={1}>
         <Avatar
           src={author.profilePicture || undefined}
           sx={{ height: 30, width: 30 }}
           onClick={goToProfile}
         />
+      </Grid>
 
-        <span>
-          <Typography onClick={goToProfile} variant="body2" fontWeight={600}>
-            {author.username}
-          </Typography>
-          <Typography variant="body1">{comment}</Typography>
-          <Typography sx={{ mt: 1 }} variant="subtitle2">
-            {moment(date).fromNow()}
-          </Typography>
-        </span>
-      </Stack>
+      <Grid item xs={10}>
+        <Typography onClick={goToProfile} variant="body2" fontWeight={600}>
+          {author.username}
+        </Typography>
+        <Typography variant="body1">{comment.content}</Typography>
+        <Typography variant="subtitle2">{moment(date).fromNow()}</Typography>
+      </Grid>
+
+      <Grid item xs={1}>
+        <IconButton onClick={openOptions}>
+          <MoreVert />
+        </IconButton>
+        <Dialog
+          fullWidth
+          maxWidth="xs"
+          open={optionsOpen}
+          onClose={closeOptions}
+        >
+          <Grid container direction="column">
+            {isCurrentUsersComment && (
+              <Form
+                method="delete"
+                action={`/${post.author.username}/post/${post.postId}/comment`}
+              >
+                <Button
+                  sx={{ borderRadius: 0 }}
+                  type="submit"
+                  name="commentId"
+                  value={comment.commentId}
+                  fullWidth
+                  color="error"
+                >
+                  Delete
+                </Button>
+              </Form>
+            )}
+            <Button sx={{ borderRadius: 0 }} fullWidth>
+              Report
+            </Button>
+            <Button sx={{ borderRadius: 0 }} fullWidth onClick={closeOptions}>
+              Cancel
+            </Button>
+          </Grid>
+        </Dialog>
+      </Grid>
     </Grid>
   );
 };

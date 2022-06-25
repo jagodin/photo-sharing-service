@@ -8,6 +8,7 @@ import {
   Skeleton,
 } from '@mui/material';
 import type { Favorites, Post, User } from '@prisma/client';
+import type { Comment as CommentModel } from '@prisma/client';
 
 import { PostFooter } from '../PostFooter';
 
@@ -21,6 +22,9 @@ interface PostModalLargeProps {
   onClose: () => void;
   post: Post & {
     author: User;
+    comments: (CommentModel & {
+      author: User;
+    })[];
     favorites: (Favorites & {
       user: User;
     })[];
@@ -63,16 +67,27 @@ export const PostModalLarge = ({
                   spacing={2}
                   sx={{ padding: (theme) => theme.spacing(2) }}
                 >
-                  <Grid item xs={12}>
+                  {/* <Grid item xs={12}>
                     <Comment
                       date={post.createdAt}
                       author={post.author}
                       comment={post.description}
+                      currentUser={currentUser}
                     />
-                  </Grid>
+                  </Grid> */}
+                  {post.comments.map((comment) => (
+                    <Grid item xs={12} key={comment.commentId}>
+                      <Comment
+                        date={comment.createdAt}
+                        comment={comment}
+                        author={comment.author}
+                        currentUser={currentUser}
+                        post={post}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
 
-                <Divider />
                 <Grid
                   xs
                   item
