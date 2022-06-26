@@ -2,7 +2,7 @@ import type { Post, User } from '@prisma/client';
 
 import { db } from './db.server';
 
-export const getPosts = async () =>
+export const getPosts = async (userId: number) =>
   await db.post.findMany({
     orderBy: { createdAt: 'desc' },
     include: {
@@ -10,6 +10,15 @@ export const getPosts = async () =>
       favorites: {
         include: {
           user: true,
+        },
+      },
+    },
+    where: {
+      author: {
+        followers: {
+          some: {
+            followingId: userId,
+          },
         },
       },
     },

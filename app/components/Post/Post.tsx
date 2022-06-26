@@ -1,4 +1,4 @@
-import { AddComment, Favorite, MoreVert, Send } from '@mui/icons-material';
+import { AddComment, MoreVert, Send } from '@mui/icons-material';
 import {
   Avatar,
   Card,

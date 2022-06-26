@@ -17,7 +17,7 @@ interface LoaderData {
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await authenticateUser(request);
   const data: LoaderData = {
-    posts: await getPosts(),
+    posts: await getPosts(user.userId),
     user,
   };
 
