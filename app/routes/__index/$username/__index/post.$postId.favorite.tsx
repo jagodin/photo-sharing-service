@@ -7,6 +7,12 @@ import { db } from '~/services/db.server';
 import { likePost } from '~/services/posts.server';
 
 export const action: ActionFunction = async ({ request, params }) => {
+  const formData = await request.formData();
+  const redirectTo = formData.get('redirectTo');
+
+  if (!redirectTo)
+    throw new Response("Expected 'redirectTo' in form data", { status: 400 });
+
   const user = await authenticateUser(request);
 
   const post = await db.post.findUnique({
@@ -20,5 +26,5 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   await likePost(user as User, post);
 
-  return redirect(`/${params.username}/post/${params.postId}`);
+  return redirect(redirectTo as string);
 };

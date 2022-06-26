@@ -7,12 +7,15 @@ import { commentOnPost, deleteComment } from '~/services/posts.server';
 
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await authenticateUser(request);
-
   const post = await db.post.findUnique({
     where: { postId: parseInt(params.postId!) },
   });
 
   const formData = await request.formData();
+  const redirectTo = formData.get('redirectTo');
+
+  if (!redirectTo)
+    throw new Response("Expected 'redirectTo' in form data", { status: 400 });
 
   if (!post)
     throw new Response(`Post with ID ${params.postId} not found.`, {
@@ -35,5 +38,5 @@ export const action: ActionFunction = async ({ request, params }) => {
     await deleteComment(user, parseInt(commentId));
   }
 
-  return redirect(`/${params.username}/post/${params.postId}`);
+  return redirect(redirectTo as string);
 };

@@ -1,8 +1,9 @@
-import { Favorite, Send, Share } from '@mui/icons-material';
+import { Send, Share } from '@mui/icons-material';
 import { Grid, IconButton, Input, Stack, Tooltip } from '@mui/material';
 import type { Favorites, Post, User } from '@prisma/client';
-import { Form } from '@remix-run/react';
+import { Form, useLocation } from '@remix-run/react';
 
+import { FavoriteButton } from '../FavoriteButton';
 import { LikeGroup } from '../LikeGroup';
 
 interface FooterProps {
@@ -16,25 +17,13 @@ interface FooterProps {
 }
 
 export const PostFooter = ({ post, currentUser }: FooterProps) => {
-  const postIsFavorited = post.favorites.some(
-    (favorite) => favorite.user.username === currentUser.username
-  );
-
   const baseUrl = `/${post.author.username}/post/${post.postId}`;
-  const favoriteAction = postIsFavorited
-    ? baseUrl + '/unfavorite'
-    : baseUrl + '/favorite';
+  const location = useLocation();
 
   return (
     <Grid container sx={{ padding: (theme) => theme.spacing(1, 2) }}>
       <Stack alignItems="center" direction="row">
-        <Tooltip title={postIsFavorited ? 'Unfavorite' : 'Favorite'}>
-          <Form method="post" action={favoriteAction}>
-            <IconButton type="submit">
-              <Favorite color={postIsFavorited ? 'error' : undefined} />
-            </IconButton>
-          </Form>
-        </Tooltip>
+        <FavoriteButton post={post} currentUser={currentUser} />
         <Tooltip title="Share">
           <IconButton>
             <Share />
@@ -58,6 +47,7 @@ export const PostFooter = ({ post, currentUser }: FooterProps) => {
             }
             name="comment"
           />
+          <input hidden readOnly value={location.pathname} name="redirectTo" />
         </Form>
       </Grid>
     </Grid>

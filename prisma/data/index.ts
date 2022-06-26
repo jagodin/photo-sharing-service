@@ -35,7 +35,7 @@ export const createPosts: (userId: number) => Prisma.PostCreateManyInput[] = (
         description: faker.lorem.sentence(),
         authorId: userId,
         type: PostType.PICTURE,
-        url: faker.image.nature(undefined, undefined, true),
+        url: faker.image.image(640, 640, false),
       };
     });
 };

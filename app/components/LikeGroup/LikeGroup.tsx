@@ -69,12 +69,7 @@ export const LikeGroup = ({ users, ...props }: LikeGroupProps) => {
   };
 
   return users.length > 0 ? (
-    <Grid
-      container
-      alignItems="center"
-      sx={{ padding: (theme) => theme.spacing(0, 1) }}
-      spacing={1}
-    >
+    <Grid container alignItems="center" spacing={1}>
       <Grid item>
         <AvatarGroup spacing="small" {...props}>
           {users.map((user) => (
