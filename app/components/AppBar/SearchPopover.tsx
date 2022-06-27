@@ -1,11 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  Box,
-  CircularProgress,
-  Grid,
-  Popover,
-  Typography,
-} from '@mui/material';
+import { CircularProgress, Grid, Popover, Typography } from '@mui/material';
 import { useFetcher } from '@remix-run/react';
 
 import { UserList } from '../UserList';

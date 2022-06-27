@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   AddAPhoto,
   Favorite,
@@ -11,7 +11,6 @@ import { Box } from '@mui/material';
 import {
   alpha,
   AppBar as MuiAppBar,
-  Avatar,
   Container,
   Grid,
   IconButton,
@@ -20,9 +19,14 @@ import {
   Toolbar,
   Tooltip,
 } from '@mui/material';
-import { useNavigate } from '@remix-run/react';
+import { useFetcher, useNavigate } from '@remix-run/react';
+
+import { Avatar } from '../Avatar';
+import { ProfileMenu } from '../ProfileMenu';
 
 import { SearchPopover } from './SearchPopover';
+
+import type { UserLoaderData } from '~/routes/resource/user';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -72,7 +76,9 @@ const iconStyle: SxProps<Theme> = {
 export const AppBar = () => {
   const navigate = useNavigate();
   const [searchEl, setSearchEl] = useState<HTMLElement | null>(null);
+  const [avatarEl, setAvatarEl] = useState<HTMLElement | null>(null);
   const [searchInput, setSearchInput] = useState('');
+  const userFetcher = useFetcher<UserLoaderData>();
 
   const handleSearchPopoverOpen = (event: React.MouseEvent<HTMLDivElement>) => {
     setSearchEl(event.currentTarget);
@@ -82,9 +88,25 @@ export const AppBar = () => {
     setSearchEl(null);
   };
 
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAvatarEl(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setAvatarEl(null);
+  };
+
   const handleOnSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
   };
+
+  useEffect(() => {
+    if (userFetcher.type === 'init') {
+      userFetcher.load('/resource/user');
+    }
+  }, [userFetcher]);
+
+  const user = userFetcher.data?.user;
 
   return (
     <MuiAppBar sx={{ mb: 3 }} color="default" position="static">
@@ -128,10 +150,21 @@ export const AppBar = () => {
                 </IconButton>
 
                 <Tooltip title="Profile">
-                  <IconButton>
-                    <Avatar sx={{ height: 24, width: 24 }} />
+                  <IconButton onClick={handleProfileMenuOpen}>
+                    <Avatar
+                      onClick={undefined}
+                      user={user}
+                      sx={{ height: 24, width: 24 }}
+                    />
                   </IconButton>
                 </Tooltip>
+
+                <ProfileMenu
+                  anchorEl={avatarEl}
+                  setAnchorEl={setAvatarEl}
+                  onClose={handleProfileMenuClose}
+                  user={user}
+                />
               </Stack>
             </Grid>
           </Grid>

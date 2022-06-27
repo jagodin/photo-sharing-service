@@ -1,16 +1,5 @@
-import {
-  Avatar,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Grid,
-  Link,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 import type { User } from '@prisma/client';
-import { useNavigate } from '@remix-run/react';
 
 import { UserList } from '../UserList';
 

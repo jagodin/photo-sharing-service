@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { AvatarGroupProps } from '@mui/material';
+import { Box } from '@mui/material';
 import { Tooltip } from '@mui/material';
 import { Link } from '@mui/material';
 import { Typography } from '@mui/material';
@@ -46,15 +47,20 @@ export const LikeGroup = ({ users, ...props }: LikeGroupProps) => {
             {users[0].username}
           </Link>{' '}
           and{' '}
-          <Link
+          <Box
             fontWeight={600}
             color="text.primary"
-            href={`#`}
-            underline="hover"
             onClick={openLikesModal}
+            sx={{
+              display: 'inline',
+              '&:hover': {
+                textDecoration: 'underline',
+                cursor: 'pointer',
+              },
+            }}
           >
             {text}
-          </Link>
+          </Box>
         </Typography>
       );
     }
