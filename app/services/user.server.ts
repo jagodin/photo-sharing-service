@@ -58,3 +58,15 @@ export const register = async ({
 
   return _.omit(await db.user.create({ data: newUser }), 'password');
 };
+
+export const searchUsers = async (searchString: string) => {
+  return (
+    await db.user.findMany({
+      where: {
+        name: { contains: searchString, mode: 'insensitive' },
+        OR: { username: { contains: searchString, mode: 'insensitive' } },
+      },
+      take: 10,
+    })
+  ).map((user) => _.omit(user, 'password'));
+};

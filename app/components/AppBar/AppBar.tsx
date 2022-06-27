@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   AddAPhoto,
   Favorite,
@@ -20,6 +21,8 @@ import {
   Tooltip,
 } from '@mui/material';
 import { useNavigate } from '@remix-run/react';
+
+import { SearchPopover } from './SearchPopover';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -68,6 +71,20 @@ const iconStyle: SxProps<Theme> = {
 
 export const AppBar = () => {
   const navigate = useNavigate();
+  const [searchEl, setSearchEl] = useState<HTMLElement | null>(null);
+  const [searchInput, setSearchInput] = useState('');
+
+  const handleSearchPopoverOpen = (event: React.MouseEvent<HTMLDivElement>) => {
+    setSearchEl(event.currentTarget);
+  };
+
+  const handleSearchPopoverClose = () => {
+    setSearchEl(null);
+  };
+
+  const handleOnSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
+  };
 
   return (
     <MuiAppBar sx={{ mb: 3 }} color="default" position="static">
@@ -79,15 +96,22 @@ export const AppBar = () => {
               item
               display={{ xs: 'none', sm: 'block', md: 'block', lg: 'block' }}
             >
-              <Search>
+              <Search onClick={handleSearchPopoverOpen}>
                 <SearchIconWrapper>
                   <SearchIcon />
                 </SearchIconWrapper>
                 <StyledInputBase
                   placeholder="Search…"
                   inputProps={{ 'aria-label': 'search' }}
+                  onChange={handleOnSearch}
+                  value={searchInput}
                 />
               </Search>
+              <SearchPopover
+                anchorEl={searchEl}
+                searchInput={searchInput}
+                onClose={handleSearchPopoverClose}
+              />
             </Box>
             <Grid item xs={12} sm={'auto'}>
               <Stack direction="row" spacing={1} justifyContent="end">
