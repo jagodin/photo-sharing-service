@@ -5,7 +5,14 @@ import { SettingsMenu } from '~/components/SettingsMenu';
 
 export default function Account() {
   return (
-    <Grid container sx={{ border: '1px solid #e0e0e0', borderRadius: '4px' }}>
+    <Grid
+      container
+      sx={{
+        border: '1px solid #e0e0e0',
+        borderRadius: '4px',
+        minHeight: '730px',
+      }}
+    >
       <Grid item xs={4} sx={{ borderRight: '1px solid #e0e0e0' }}>
         <SettingsMenu />
       </Grid>
