@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client';
+import type { Prisma, User } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import _ from 'lodash';
 import { AuthorizationError } from 'remix-auth';
@@ -12,9 +12,7 @@ export const login = async (email: string, password: string) => {
     throw new AuthorizationError('Invalid credentials');
   }
 
-  const isMatch = await bcrypt.compare(password, user.password);
-
-  if (!isMatch) {
+  if (!(await passwordMatchesHash(password, user.password))) {
     throw new AuthorizationError('Invalid credentials');
   }
 
@@ -119,3 +117,25 @@ export const updateUser = async ({
     }),
   };
 };
+
+interface ChangePasswordOptions {
+  newPassword: string;
+  user: User;
+}
+
+export const changePassword = async ({
+  newPassword,
+  user,
+}: ChangePasswordOptions) => {
+  const salt = await bcrypt.genSalt(10);
+
+  const hashed = await bcrypt.hash(newPassword, salt);
+
+  return await db.user.update({
+    where: { userId: user.userId },
+    data: { password: hashed },
+  });
+};
+
+export const passwordMatchesHash = async (password: string, hashed: string) =>
+  await bcrypt.compare(password, hashed);

@@ -16,7 +16,7 @@ export default function Account() {
       <Grid item xs={4} sx={{ borderRight: '1px solid #e0e0e0' }}>
         <SettingsMenu />
       </Grid>
-      <Grid item xs={8} sx={{ padding: (theme) => theme.spacing(4) }}>
+      <Grid item xs={8} sx={{ padding: (theme) => theme.spacing(4), mt: 2 }}>
         <Outlet />
       </Grid>
     </Grid>

@@ -1,6 +1,4 @@
-import type { ChangeEvent } from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useRef } from 'react';
 import { Button, Grid, TextField } from '@mui/material';
 import { Form } from '@remix-run/react';
 
@@ -11,33 +9,23 @@ interface ChangePasswordFormProps {
 }
 
 export const ChangePasswordForm = ({ errors }: ChangePasswordFormProps) => {
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword1, setNewPassword1] = useState('');
-  const [newPassword2, setNewPassword2] = useState('');
-  const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const currentPasswordError = errors?.find(
+    (error) => error.field === 'currentPassword'
+  );
+  const newPassword1Error = errors?.find(
+    (error) => error.field === 'newPassword1'
+  );
+  const newPassword2Error = errors?.find(
+    (error) => error.field === 'newPassword2'
+  );
 
-  const changeCurrentPassword = (e: ChangeEvent<HTMLInputElement>) => {
-    setCurrentPassword(e.target.value);
+  const clearData = () => {
+    if (formRef.current) formRef.current.reset();
   };
-
-  const changeNewPassword1 = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewPassword1(e.target.value);
-  };
-
-  const changeNewPassword2 = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewPassword2(e.target.value);
-  };
-
-  useEffect(() => {
-    if (newPassword1 !== newPassword2) {
-      setPasswordsMatch(false);
-    } else {
-      setPasswordsMatch(true);
-    }
-  }, [newPassword1, newPassword2]);
 
   return (
-    <Form method="post">
+    <Form ref={formRef} method="post">
       <Grid item xs={12} container rowGap={4} justifyContent="center">
         <Grid item xs={12}>
           <TextField
@@ -47,10 +35,10 @@ export const ChangePasswordForm = ({ errors }: ChangePasswordFormProps) => {
             FormHelperTextProps={{
               sx: { margin: 0, mt: 1 },
             }}
-            onChange={changeCurrentPassword}
-            value={currentPassword}
             type="password"
             autoComplete="current-password"
+            helperText={currentPasswordError && currentPasswordError.message}
+            error={currentPasswordError ? true : false}
           />
         </Grid>
         <Grid item xs={12}>
@@ -58,9 +46,12 @@ export const ChangePasswordForm = ({ errors }: ChangePasswordFormProps) => {
             fullWidth
             label="New Password"
             name="newPassword1"
-            onChange={changeNewPassword1}
-            value={newPassword1}
             type="password"
+            FormHelperTextProps={{
+              sx: { margin: 0, mt: 1 },
+            }}
+            helperText={newPassword1Error && newPassword1Error.message}
+            error={newPassword1Error ? true : false}
           />
         </Grid>
         <Grid item xs={12}>
@@ -68,17 +59,25 @@ export const ChangePasswordForm = ({ errors }: ChangePasswordFormProps) => {
             fullWidth
             label="Confirm New Password"
             name="newPassword2"
-            onChange={changeNewPassword2}
-            value={newPassword2}
             type="password"
-            error={!passwordsMatch}
-            helperText={!passwordsMatch ? 'Passwords do not match.' : undefined}
+            FormHelperTextProps={{
+              sx: { margin: 0, mt: 1 },
+            }}
+            helperText={newPassword2Error && newPassword2Error.message}
+            error={newPassword2Error ? true : false}
           />
         </Grid>
-        <Grid item xs={12}>
-          <Button variant="outlined" type="submit">
-            Submit
-          </Button>
+        <Grid item xs={12} container justifyContent="space-between">
+          <Grid item>
+            <Button variant="outlined" type="submit">
+              Submit
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button variant="outlined" onClick={clearData}>
+              Reset
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </Form>

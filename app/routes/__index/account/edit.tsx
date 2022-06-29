@@ -10,6 +10,7 @@ import { authenticateUser } from '~/services/auth.server';
 import { sessionStorage } from '~/services/session.server';
 import type { ValidationError } from '~/services/user.server';
 import { updateUser } from '~/services/user.server';
+import type { Message } from '~/utils/types';
 
 interface LoaderData {
   user: Omit<User, 'password'>;
@@ -42,6 +43,11 @@ export const action: ActionFunction = async ({ request }) => {
   const session = await sessionStorage.getSession(
     request.headers.get('Cookie')
   );
+
+  session.flash('message', {
+    severity: 'success',
+    message: 'Account successfully updated.',
+  } as Message);
 
   session.set('user', _.omit(newUser, 'password'));
 
