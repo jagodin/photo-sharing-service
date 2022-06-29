@@ -12,7 +12,9 @@ export const AppLayout = ({ children, user }: AppLayoutProps) => {
   return (
     <Box>
       <AppBar user={user} />
-      <Container maxWidth="md">{children}</Container>
+      <Container maxWidth="md" sx={{ pt: '92px' }}>
+        {children}
+      </Container>
     </Box>
   );
 };

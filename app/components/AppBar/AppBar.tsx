@@ -103,7 +103,7 @@ export const AppBar = ({ user }: AppBarProps) => {
   };
 
   return (
-    <MuiAppBar sx={{ mb: 3 }} color="default" position="static">
+    <MuiAppBar color="default">
       <Container sx={{ padding: '0px !important' }} maxWidth="md">
         <Toolbar>
           <Grid container justifyContent="space-between" alignItems="center">
