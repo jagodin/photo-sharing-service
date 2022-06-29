@@ -9,8 +9,8 @@ import { sessionStorage } from '~/services/session.server';
 const authenticator = new Authenticator<Omit<User, 'password'>>(
   sessionStorage,
   {
-    sessionKey: 'sessionKey',
-    sessionErrorKey: 'sessionErrorKey',
+    sessionKey: 'user',
+    sessionErrorKey: 'error',
   }
 );
 
@@ -19,7 +19,6 @@ const formStrategy = new FormStrategy(async ({ form }) => {
   let password = form.get('password') as string;
 
   const user = await login(email, password);
-  console.log(user);
 
   return user;
 });
@@ -28,7 +27,9 @@ authenticator.use(formStrategy);
 
 export { authenticator };
 
-export const authenticateUser = async (request: Request) =>
-  await authenticator.isAuthenticated(request, {
+export const authenticateUser = async (request: Request) => {
+  const user = await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   });
+  return user;
+};

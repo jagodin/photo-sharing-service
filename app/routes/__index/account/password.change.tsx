@@ -1,9 +1,8 @@
+import { Typography } from '@mui/material';
 import type { User } from '@prisma/client';
-import { Outlet, useLoaderData } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/server-runtime';
 import { json } from '@remix-run/server-runtime';
 
-import { AppLayout } from '~/components/AppLayout';
 import { authenticateUser } from '~/services/auth.server';
 
 interface LoaderData {
@@ -18,11 +17,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json(data);
 };
 
-export default function Index() {
-  const { user } = useLoaderData<LoaderData>();
-  return (
-    <AppLayout user={user}>
-      <Outlet />
-    </AppLayout>
-  );
+export default function ChangePassword() {
+  return <Typography variant="h3">Change Password</Typography>;
 }

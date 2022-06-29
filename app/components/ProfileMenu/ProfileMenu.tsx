@@ -1,5 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react';
-import { AccountCircle, Logout } from '@mui/icons-material';
+import { AccountCircle, Logout, Settings } from '@mui/icons-material';
+import type { SxProps, Theme } from '@mui/material';
 import {
   Divider,
   List,
@@ -29,6 +30,30 @@ export const ProfileMenu = ({
   const navigate = useNavigate();
   const userFetcher = useFetcher();
 
+  const buttonStyle: SxProps<Theme> = {
+    padding: (theme) => theme.spacing(0.5, 3),
+  };
+
+  const goToProfile = () => {
+    setAnchorEl(null);
+    navigate(`/${user?.username}`);
+  };
+
+  const logout = () => {
+    userFetcher.submit(
+      {},
+      {
+        method: 'post',
+        action: '/logout',
+      }
+    );
+  };
+
+  const goToUser = () => {
+    setAnchorEl(null);
+    navigate('/account/edit');
+  };
+
   return (
     <Popover
       elevation={10}
@@ -46,33 +71,24 @@ export const ProfileMenu = ({
     >
       <List>
         <ListItem key="profile" disablePadding>
-          <ListItemButton
-            sx={{ padding: (theme) => theme.spacing(0.5, 3) }}
-            onClick={() => {
-              setAnchorEl(null);
-              navigate(`/${user?.username}`);
-            }}
-          >
+          <ListItemButton sx={buttonStyle} onClick={goToProfile}>
             <ListItemIcon>
               <AccountCircle />
             </ListItemIcon>
             <ListItemText>Profile</ListItemText>
           </ListItemButton>
         </ListItem>
+        <ListItem key="settings" disablePadding>
+          <ListItemButton sx={buttonStyle} onClick={goToUser}>
+            <ListItemIcon>
+              <Settings />
+            </ListItemIcon>
+            <ListItemText>Settings</ListItemText>
+          </ListItemButton>
+        </ListItem>
         <Divider />
         <ListItem key="logout" disablePadding>
-          <ListItemButton
-            sx={{ padding: (theme) => theme.spacing(0.5, 3) }}
-            onClick={() => {
-              userFetcher.submit(
-                {},
-                {
-                  method: 'post',
-                  action: '/logout',
-                }
-              );
-            }}
-          >
+          <ListItemButton sx={buttonStyle} onClick={logout}>
             <ListItemIcon>
               <Logout />
             </ListItemIcon>

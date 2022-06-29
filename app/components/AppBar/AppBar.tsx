@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   AddAPhoto,
   Favorite,
@@ -19,14 +19,13 @@ import {
   Toolbar,
   Tooltip,
 } from '@mui/material';
-import { useFetcher, useNavigate } from '@remix-run/react';
+import type { User } from '@prisma/client';
+import { useNavigate } from '@remix-run/react';
 
 import { Avatar } from '../Avatar';
 import { ProfileMenu } from '../ProfileMenu';
 
 import { SearchPopover } from './SearchPopover';
-
-import type { UserLoaderData } from '~/routes/resource/user';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -73,12 +72,15 @@ const iconStyle: SxProps<Theme> = {
   fontSize: '24px',
 };
 
-export const AppBar = () => {
+interface AppBarProps {
+  user: Omit<User, 'password'>;
+}
+
+export const AppBar = ({ user }: AppBarProps) => {
   const navigate = useNavigate();
   const [searchEl, setSearchEl] = useState<HTMLElement | null>(null);
   const [avatarEl, setAvatarEl] = useState<HTMLElement | null>(null);
   const [searchInput, setSearchInput] = useState('');
-  const userFetcher = useFetcher<UserLoaderData>();
 
   const handleSearchPopoverOpen = (event: React.MouseEvent<HTMLDivElement>) => {
     setSearchEl(event.currentTarget);
@@ -99,14 +101,6 @@ export const AppBar = () => {
   const handleOnSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
   };
-
-  useEffect(() => {
-    if (userFetcher.type === 'init') {
-      userFetcher.load('/resource/user');
-    }
-  }, [userFetcher]);
-
-  const user = userFetcher.data?.user;
 
   return (
     <MuiAppBar sx={{ mb: 3 }} color="default" position="static">

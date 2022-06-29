@@ -70,3 +70,52 @@ export const searchUsers = async (searchString: string) => {
     })
   ).map((user) => _.omit(user, 'password'));
 };
+
+interface UpdateUserOptions {
+  name?: string;
+  username?: string;
+  profileDescription?: string;
+  email?: string;
+  userId: number;
+}
+
+export interface ValidationError {
+  field: string;
+  message?: string;
+}
+
+export const updateUser = async ({
+  name,
+  username,
+  profileDescription,
+  email,
+  userId,
+}: UpdateUserOptions) => {
+  const errors: ValidationError[] = [];
+  const existingUsername = await db.user.findUnique({ where: { username } });
+  if (existingUsername && existingUsername.userId !== userId)
+    errors.push({
+      message: `${username} is already taken by an existing user.`,
+      field: 'username',
+    });
+  const existingEmail = await db.user.findUnique({ where: { email } });
+  if (existingEmail && existingEmail.userId !== userId)
+    errors.push({
+      message: `${email} is already taken by an existing user.`,
+      field: 'email',
+    });
+
+  if (errors.length > 0)
+    return {
+      errors,
+      user: null,
+    };
+
+  return {
+    errors: null,
+    user: await db.user.update({
+      where: { userId },
+      data: { name, username, profileDescription, email },
+    }),
+  };
+};
