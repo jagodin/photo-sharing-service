@@ -75,6 +75,7 @@ interface UpdateUserOptions {
   profileDescription?: string;
   email?: string;
   userId: number;
+  profilePicture?: string;
 }
 
 export interface ValidationError {
@@ -88,6 +89,7 @@ export const updateUser = async ({
   profileDescription,
   email,
   userId,
+  profilePicture,
 }: UpdateUserOptions) => {
   const errors: ValidationError[] = [];
   const existingUsername = await db.user.findUnique({ where: { username } });
@@ -113,7 +115,7 @@ export const updateUser = async ({
     errors: null,
     user: await db.user.update({
       where: { userId },
-      data: { name, username, profileDescription, email },
+      data: { name, username, profileDescription, email, profilePicture },
     }),
   };
 };

@@ -14,10 +14,10 @@ export const Avatar = ({ user, sx, ...rest }: AvatarProps) => {
       onClick={() => navigate(`/${user?.username}`)}
       src={user?.profilePicture || undefined}
       sx={{
-        ...sx,
         '&:hover': {
           cursor: 'pointer',
         },
+        ...sx,
       }}
       {...rest}
     />

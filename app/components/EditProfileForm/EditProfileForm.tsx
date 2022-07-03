@@ -12,21 +12,28 @@ import type { User } from '@prisma/client';
 import { Form } from '@remix-run/react';
 
 import { Avatar } from '../Avatar';
+import { ChangeAvatarModal } from '../ChangeAvatarModal';
 
 import type { ValidationError } from '~/services/user.server';
 
 interface EditProfileFormProps {
   user: Omit<User, 'password'>;
   errors?: ValidationError[];
+  uploadedAvatar?: string;
 }
 
-export const EditProfileForm = ({ user, errors }: EditProfileFormProps) => {
+export const EditProfileForm = ({
+  user,
+  errors,
+  uploadedAvatar,
+}: EditProfileFormProps) => {
   const [email, setEmail] = useState(user.email);
   const [name, setName] = useState(user.name);
   const [profileDescription, setProfileDescription] = useState(
     user.profileDescription
   );
   const [username, setUsername] = useState(user.username);
+  const [changeAvatarOpen, setChangeAvatarOpen] = useState(false);
 
   const changeName = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -44,6 +51,14 @@ export const EditProfileForm = ({ user, errors }: EditProfileFormProps) => {
     setProfileDescription(e.target.value);
   };
 
+  const openChangeAvatar = () => {
+    setChangeAvatarOpen(true);
+  };
+
+  const closeChangeAvatar = () => {
+    setChangeAvatarOpen(false);
+  };
+
   const usernameError = errors?.find((error) => error.field === 'username');
   const emailError = errors?.find((error) => error.field === 'email');
 
@@ -54,10 +69,19 @@ export const EditProfileForm = ({ user, errors }: EditProfileFormProps) => {
           <Stack direction="row" spacing={2} alignItems="center">
             <Avatar user={user} onClick={undefined} />
             <Typography variant="h5">{user.username}</Typography>
-            <Button variant="outlined">Change Avatar</Button>
+            <Button onClick={openChangeAvatar} variant="outlined">
+              Change Avatar
+            </Button>
+            <ChangeAvatarModal
+              open={changeAvatarOpen}
+              onClose={closeChangeAvatar}
+              user={user}
+              uploadedAvatar={uploadedAvatar}
+            />
           </Stack>
         </Grid>
         <Grid item xs={12}>
+          <input hidden readOnly name="action" value="edit" />
           <TextField
             helperText={
               "Help people discover your account by using the name that you're known by: either your full name, nickname or business name."
