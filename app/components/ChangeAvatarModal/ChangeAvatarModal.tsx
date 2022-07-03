@@ -83,6 +83,9 @@ export const ChangeAvatarModal = ({
             loading={transition.state !== 'idle'}
             onClick={onClose}
             type="submit"
+            variant="outlined"
+            sx={{ mr: 1 }}
+            disabled={!uploadedAvatar}
           >
             Save
           </LoadingButton>
