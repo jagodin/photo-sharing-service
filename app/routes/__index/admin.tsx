@@ -16,7 +16,7 @@ interface LoaderData {
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await authenticateUser(request);
 
-  if (!user.isAdmin) redirect('/');
+  if (!user.isAdmin) return redirect('/');
 
   return json<LoaderData>({
     posts: await db.post.findMany({ where: { approved: false } }),
