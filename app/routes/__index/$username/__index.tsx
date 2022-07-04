@@ -80,7 +80,7 @@ export default function Profile() {
   } = useLoaderData<LoaderData>();
 
   return (
-    <Grid container spacing={4}>
+    <Grid container spacing={4} sx={{ mb: 4 }}>
       <Outlet />
       <Grid item xs={12}>
         <ProfileHeader
