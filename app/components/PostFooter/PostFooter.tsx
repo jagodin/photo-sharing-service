@@ -1,5 +1,5 @@
-import { Send, Share } from '@mui/icons-material';
-import { Grid, IconButton, Input, Stack, Tooltip } from '@mui/material';
+import { Send } from '@mui/icons-material';
+import { Grid, IconButton, Input, Stack } from '@mui/material';
 import type { Favorites, Post, User } from '@prisma/client';
 import { Form, useLocation } from '@remix-run/react';
 

@@ -1,4 +1,4 @@
-import { AddComment, Send } from '@mui/icons-material';
+import { AddComment } from '@mui/icons-material';
 import {
   Avatar,
   Card,
