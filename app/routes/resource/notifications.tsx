@@ -18,6 +18,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       where: { userId },
       include: { originUser: true },
       orderBy: { createdAt: 'desc' },
+      take: 10,
     })
   ).map((notification) => ({
     ...notification,

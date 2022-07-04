@@ -23,8 +23,6 @@ export const NotificationsPopover = ({
     if (fetcher.type === 'init') {
       fetcher.load('/resource/notifications');
     }
-
-    console.log(fetcher);
   }, [fetcher]);
 
   const notifications = fetcher.data?.notifications;
@@ -53,7 +51,9 @@ export const NotificationsPopover = ({
         {fetcher.state !== 'idle' ? (
           <CircularProgress />
         ) : notifications?.length === 0 ? (
-          <Typography variant="body1">No notifications</Typography>
+          <Typography variant="body1">
+            No notifications yet! Follow accounts and engage with our community!
+          </Typography>
         ) : (
           <NotificationList notifications={notifications || []} />
         )}

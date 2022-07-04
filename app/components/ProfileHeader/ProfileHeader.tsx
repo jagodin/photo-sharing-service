@@ -57,6 +57,12 @@ export const ProfileHeader = ({
           {!currentUserProfile &&
             (currentUserFollowing ? (
               <Form action={`/${user.username}/unfollow`} method="post">
+                <input
+                  hidden
+                  readOnly
+                  name="redirectTo"
+                  value={`/${user.username}`}
+                />
                 <Button
                   name="unfollow"
                   type="submit"
@@ -68,6 +74,12 @@ export const ProfileHeader = ({
               </Form>
             ) : (
               <Form action={`/${user.username}/follow`} method="post">
+                <input
+                  hidden
+                  readOnly
+                  name="redirectTo"
+                  value={`/${user.username}`}
+                />
                 <Button
                   name="follow"
                   type="submit"

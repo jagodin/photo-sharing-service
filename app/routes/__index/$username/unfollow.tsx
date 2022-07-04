@@ -6,8 +6,9 @@ import { unfollowUser } from '~/services/follow.server';
 
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await authenticateUser(request);
+  const formData = await request.formData();
 
   await unfollowUser(user, params.username!);
 
-  return redirect(`/${params.username}`);
+  return redirect(formData.get('redirectTo') as string);
 };
