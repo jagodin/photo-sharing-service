@@ -2,10 +2,13 @@ import type { Comment, Favorites, Post, User } from '@prisma/client';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/server-runtime';
 import { json } from '@remix-run/server-runtime';
+import { redirect } from '@remix-run/server-runtime';
 
 import { PostModalLarge } from '~/components/PostModalLarge';
 import { authenticateUser } from '~/services/auth.server';
 import { db } from '~/services/db.server';
+import { sessionStorage } from '~/services/session.server';
+import type { Message } from '~/utils/types';
 
 interface LoaderData {
   username: string;
@@ -43,6 +46,23 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 
   if (!post)
     throw new Response(`Post ${params.postId} not found.`, { status: 404 });
+
+  if (!post.approved && !currentUser.isAdmin) {
+    const session = await sessionStorage.getSession(
+      request.headers.get('Cookie')
+    );
+
+    session.flash('message', {
+      severity: 'error',
+      message: `Post with ID ${params.postId} hasn't been approved yet.`,
+    } as Message);
+
+    return redirect('/', {
+      headers: {
+        'Set-Cookie': await sessionStorage.commitSession(session),
+      },
+    });
+  }
 
   const data: LoaderData = {
     username: params.username!,

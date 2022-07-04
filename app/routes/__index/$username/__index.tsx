@@ -10,7 +10,6 @@ import { ProfileHeader } from '~/components/ProfileHeader';
 import { authenticateUser } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import { userFollowsUser } from '~/services/follow.server';
-import { getUsersPosts } from '~/services/posts.server';
 
 interface LoaderData {
   user: Omit<User, 'password'>;

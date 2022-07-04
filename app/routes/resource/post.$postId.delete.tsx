@@ -5,7 +5,7 @@ import { authenticateUser } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { userId } = await authenticateUser(request);
+  const { userId, isAdmin } = await authenticateUser(request);
 
   const postId = params.postId;
 
@@ -18,7 +18,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (!post)
     throw new Response(`Post with ID ${postId} not found.`, { status: 400 });
 
-  if (post.authorId !== userId)
+  if (post.authorId !== userId && !isAdmin)
     throw new Response(`User unauthorized to delete Post with ID ${postId}.`, {
       status: 401,
     });

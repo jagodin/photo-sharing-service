@@ -36,7 +36,11 @@ export const Header = ({ post, currentUser }: HeaderProps) => {
       </Stack>
       <Stack alignItems="center" direction="row" spacing={1}>
         <PostApprovedIcon post={post} />
-        <PostOptionsMenu post={post} currentUser={currentUser} />
+        <PostOptionsMenu
+          redirectAfterDelete={`/${post.author.username}`}
+          post={post}
+          currentUser={currentUser}
+        />
       </Stack>
     </Grid>
   );

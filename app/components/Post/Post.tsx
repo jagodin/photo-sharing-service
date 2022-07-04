@@ -53,9 +53,13 @@ export const Post = ({ post, currentUser }: PostProps) => {
           </Link>
         }
         action={
-          <Stack direction="row" alignItems="center">
+          <Stack spacing={1} direction="row" alignItems="center">
             <PostApprovedIcon post={post} />
-            <PostOptionsMenu post={post} currentUser={currentUser} />
+            <PostOptionsMenu
+              redirectAfterDelete="/"
+              post={post}
+              currentUser={currentUser}
+            />
           </Stack>
         }
       />

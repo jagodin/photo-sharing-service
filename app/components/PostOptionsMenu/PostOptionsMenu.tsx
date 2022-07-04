@@ -17,11 +17,13 @@ interface PostOptionsMenuProps {
     author: User;
   };
   currentUser: Omit<User, 'password'>;
+  redirectAfterDelete: string;
 }
 
 export const PostOptionsMenu = ({
   post,
   currentUser,
+  redirectAfterDelete,
 }: PostOptionsMenuProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -49,14 +51,15 @@ export const PostOptionsMenu = ({
         <MoreVert />
       </IconButton>
       <Menu anchorEl={anchorEl} open={open} onClose={closeMenu}>
-        {currentUser.userId === post.authorId && (
-          <MenuItem onClick={openDeleteConfirm}>
-            <ListItemIcon>
-              <Delete />
-            </ListItemIcon>
-            <ListItemText>Delete</ListItemText>
-          </MenuItem>
-        )}
+        {currentUser.userId === post.authorId ||
+          (currentUser.isAdmin && (
+            <MenuItem onClick={openDeleteConfirm}>
+              <ListItemIcon>
+                <Delete />
+              </ListItemIcon>
+              <ListItemText>Delete</ListItemText>
+            </MenuItem>
+          ))}
         <MenuItem>
           <ListItemIcon>
             <Flag />
@@ -71,6 +74,7 @@ export const PostOptionsMenu = ({
         open={deleteConfirmOpen}
         onClose={closeDeleteConfirm}
         post={post}
+        redirectTo={redirectAfterDelete}
       />
     </>
   );

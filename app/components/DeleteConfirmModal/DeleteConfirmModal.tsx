@@ -8,12 +8,14 @@ interface DeleteConfirmModalProps {
   };
   open: boolean;
   onClose: () => void;
+  redirectTo: string;
 }
 
 export const DeleteConfirmModal = ({
   post,
   open,
   onClose,
+  redirectTo,
 }: DeleteConfirmModalProps) => {
   return (
     <Dialog
@@ -24,12 +26,7 @@ export const DeleteConfirmModal = ({
       <DialogTitle>Delete Confirm</DialogTitle>
       <Stack spacing={1}>
         <Form method="post" action={`/resource/post/${post.postId}/delete`}>
-          <input
-            hidden
-            readOnly
-            value={`/${post.author.username}`}
-            name="redirectTo"
-          />
+          <input hidden readOnly value={redirectTo} name="redirectTo" />
           <Button fullWidth onClick={onClose} type="submit" color="error">
             Delete
           </Button>
