@@ -49,7 +49,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         },
       },
     },
-    take: 5,
+    take: 30,
   });
 
   const data: LoaderData = {
@@ -67,7 +67,7 @@ export default function Index() {
     <Grid container spacing={3} sx={{ mb: 4 }}>
       <Outlet />
       <Grid item xs={12} sm={12} md={8}>
-        <Feed currentUser={user} initialPosts={posts} />
+        {posts.length > 0 && <Feed currentUser={user} posts={posts} />}
       </Grid>
       <Grid item sm={0} md={4}>
         <FeedSideBar suggestedUsers={suggestedUsers} user={user} />
