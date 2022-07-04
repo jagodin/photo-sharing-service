@@ -23,6 +23,7 @@ import type { User } from '@prisma/client';
 import { useNavigate } from '@remix-run/react';
 
 import { Avatar } from '../Avatar';
+import { NotificationsPopover } from '../NotificationsPopover';
 import { ProfileMenu } from '../ProfileMenu';
 
 import { SearchPopover } from './SearchPopover';
@@ -80,6 +81,9 @@ export const AppBar = ({ user }: AppBarProps) => {
   const navigate = useNavigate();
   const [searchEl, setSearchEl] = useState<HTMLElement | null>(null);
   const [avatarEl, setAvatarEl] = useState<HTMLElement | null>(null);
+  const [notificationsEl, setNotificationsEl] = useState<HTMLElement | null>(
+    null
+  );
   const [searchInput, setSearchInput] = useState('');
 
   const handleSearchPopoverOpen = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -100,6 +104,14 @@ export const AppBar = ({ user }: AppBarProps) => {
 
   const handleOnSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
+  };
+
+  const handleNotificationsOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setNotificationsEl(event.currentTarget);
+  };
+
+  const handleNotificationsClose = () => {
+    setNotificationsEl(null);
   };
 
   return (
@@ -139,9 +151,14 @@ export const AppBar = ({ user }: AppBarProps) => {
                   <AddAPhoto sx={iconStyle} />
                 </IconButton>
 
-                <IconButton>
+                <IconButton onClick={handleNotificationsOpen}>
                   <Favorite sx={iconStyle} />
                 </IconButton>
+
+                <NotificationsPopover
+                  onClose={handleNotificationsClose}
+                  anchorEl={notificationsEl}
+                />
 
                 <Tooltip title="Profile">
                   <IconButton onClick={handleProfileMenuOpen}>

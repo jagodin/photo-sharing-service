@@ -34,22 +34,32 @@ export const getUsersPosts = async (username: string) =>
   });
 
 export const likePost = async (user: User, post: Post) =>
-  await db.favorites.upsert({
-    create: {
-      user: { connect: { userId: user.userId } },
-      post: { connect: { postId: post.postId } },
-    },
-    update: {
-      user: { connect: { userId: user.userId } },
-      post: { connect: { postId: post.postId } },
-    },
-    where: {
-      userId_postId: {
-        userId: user.userId,
+  await db.$transaction([
+    db.favorites.upsert({
+      create: {
+        user: { connect: { userId: user.userId } },
+        post: { connect: { postId: post.postId } },
+      },
+      update: {
+        user: { connect: { userId: user.userId } },
+        post: { connect: { postId: post.postId } },
+      },
+      where: {
+        userId_postId: {
+          userId: user.userId,
+          postId: post.postId,
+        },
+      },
+    }),
+    db.notification.create({
+      data: {
+        type: 'LIKE',
+        userId: post.authorId,
+        originUserId: user.userId,
         postId: post.postId,
       },
-    },
-  });
+    }),
+  ]);
 
 export const unlikePost = async (user: User, post: Post) =>
   await db.favorites.delete({

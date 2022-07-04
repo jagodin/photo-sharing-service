@@ -13,21 +13,23 @@ datasource db {
 }
 
 model User {
-  userId              Int @id @default(autoincrement())
-  username            String @unique
-  name                String
-  email               String @unique
-  password            String
-  lastLogin           DateTime?
-  followers           Follows[] @relation("follower")
-  following           Follows[] @relation("following")
-  profilePicture      String?
-  updatedAt           DateTime @updatedAt
-  createdAt           DateTime @default(now())
-  posts               Post[]
-  comments            Comment[]
-  profileDescription  String?
-  favorites           Favorites[]
+  userId                      Int @id @default(autoincrement())
+  username                    String @unique
+  name                        String
+  email                       String @unique
+  password                    String
+  lastLogin                   DateTime?
+  followers                   Follows[] @relation("follower")
+  following                   Follows[] @relation("following")
+  profilePicture              String?
+  updatedAt                   DateTime @updatedAt
+  createdAt                   DateTime @default(now())
+  posts                       Post[]
+  comments                    Comment[]
+  profileDescription          String?
+  favorites                   Favorites[]
+  notifications               Notification[] @relation("user")
+  notificationsForOtherUsers  Notification[] @relation("originUser")
 }
 
 model Follows {
@@ -52,6 +54,7 @@ model Post {
   type          PostType
   url           String
   favorites     Favorites[]
+  notifications Notification[]
   comments      Comment[]
   updatedAt     DateTime @updatedAt
   createdAt     DateTime @default(now())
@@ -75,4 +78,22 @@ model Comment {
   postId        Int
   updatedAt     DateTime @updatedAt
   createdAt     DateTime @default(now())
+}
+
+model Notification {
+  notificationId   Int @id @default(autoincrement())
+  user             User @relation(name: "user", fields: [userId], references: [userId])
+  userId           Int
+  originUser       User @relation(name: "originUser", fields: [originUserId], references: [userId])
+  originUserId     Int
+  type             NotificationType
+  post             Post? @relation(fields: [postId], references: [postId])
+  postId           Int?
+  updatedAt        DateTime @updatedAt
+  createdAt        DateTime @default(now())
+}
+
+enum NotificationType {
+  FOLLOW
+  LIKE
 }

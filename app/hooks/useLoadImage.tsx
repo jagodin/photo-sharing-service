@@ -12,7 +12,6 @@ export const useLoadImage = (url: string) => {
     const image = new Image();
     image.onload = handleImageLoaded;
     image.src = url;
-    console.log(image.src);
     setImage(image);
   }, [url]);
 

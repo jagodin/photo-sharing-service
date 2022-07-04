@@ -30,24 +30,32 @@ export const followUser = async (
     return new Response(`User with username ${followingUsername} not found`, {
       status: 404,
     });
-  console.log(`${user.username} wants to follow ${following.username}`);
 
-  await db.follows.upsert({
-    create: {
-      follower: { connect: { userId: following.userId } },
-      following: { connect: { userId: user.userId } },
-    },
-    update: {
-      follower: { connect: { userId: following.userId } },
-      following: { connect: { userId: user.userId } },
-    },
-    where: {
-      followerId_followingId: {
-        followerId: following.userId,
-        followingId: user.userId,
+  await db.$transaction([
+    db.follows.upsert({
+      create: {
+        follower: { connect: { userId: following.userId } },
+        following: { connect: { userId: user.userId } },
       },
-    },
-  });
+      update: {
+        follower: { connect: { userId: following.userId } },
+        following: { connect: { userId: user.userId } },
+      },
+      where: {
+        followerId_followingId: {
+          followerId: following.userId,
+          followingId: user.userId,
+        },
+      },
+    }),
+    db.notification.create({
+      data: {
+        type: 'FOLLOW',
+        userId: following.userId,
+        originUserId: user.userId,
+      },
+    }),
+  ]);
 };
 
 export const unfollowUser = async (
