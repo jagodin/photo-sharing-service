@@ -10,7 +10,7 @@ import { Feed } from '~/components/Feed';
 import { FeedSideBar } from '~/components/FeedSideBar';
 import { authenticateUser } from '~/services/auth.server';
 import { db } from '~/services/db.server';
-import { getPosts } from '~/services/posts.server';
+import type { getPosts } from '~/services/posts.server';
 
 interface LoaderData {
   posts: Prisma.PromiseReturnType<typeof getPosts>;
@@ -30,8 +30,30 @@ export const loader: LoaderFunction = async ({ request }) => {
     .map((user) => _.omit(user, 'password'))
     .filter((u) => u.userId !== user.userId);
 
+  const posts = await db.post.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: {
+      author: true,
+      favorites: {
+        include: {
+          user: true,
+        },
+      },
+    },
+    where: {
+      author: {
+        followers: {
+          some: {
+            followingId: user.userId,
+          },
+        },
+      },
+    },
+    take: 5,
+  });
+
   const data: LoaderData = {
-    posts: await getPosts(user.userId),
+    posts,
     user,
     suggestedUsers,
   };
@@ -45,7 +67,7 @@ export default function Index() {
     <Grid container spacing={3}>
       <Outlet />
       <Grid item xs={12} sm={12} md={8}>
-        <Feed currentUser={user} posts={posts} />
+        <Feed currentUser={user} initialPosts={posts} />
       </Grid>
       <Grid item sm={0} md={4}>
         <FeedSideBar suggestedUsers={suggestedUsers} user={user} />
