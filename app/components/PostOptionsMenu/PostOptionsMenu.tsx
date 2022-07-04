@@ -51,15 +51,14 @@ export const PostOptionsMenu = ({
         <MoreVert />
       </IconButton>
       <Menu anchorEl={anchorEl} open={open} onClose={closeMenu}>
-        {currentUser.userId === post.authorId ||
-          (currentUser.isAdmin && (
-            <MenuItem onClick={openDeleteConfirm}>
-              <ListItemIcon>
-                <Delete />
-              </ListItemIcon>
-              <ListItemText>Delete</ListItemText>
-            </MenuItem>
-          ))}
+        {(currentUser.userId === post.authorId || currentUser.isAdmin) && (
+          <MenuItem onClick={openDeleteConfirm}>
+            <ListItemIcon>
+              <Delete />
+            </ListItemIcon>
+            <ListItemText>Delete</ListItemText>
+          </MenuItem>
+        )}
         <MenuItem>
           <ListItemIcon>
             <Flag />
