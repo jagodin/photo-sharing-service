@@ -5,6 +5,7 @@ import {
   Home,
   Search as SearchIcon,
 } from '@mui/icons-material';
+import { AdminPanelSettings } from '@mui/icons-material';
 import type { SxProps, Theme } from '@mui/material';
 import { Stack } from '@mui/material';
 import { Box } from '@mui/material';
@@ -159,6 +160,14 @@ export const AppBar = ({ user }: AppBarProps) => {
                   onClose={handleNotificationsClose}
                   anchorEl={notificationsEl}
                 />
+
+                {user.isAdmin && (
+                  <Tooltip title="Admin">
+                    <IconButton onClick={() => navigate('/admin')}>
+                      <AdminPanelSettings />
+                    </IconButton>
+                  </Tooltip>
+                )}
 
                 <Tooltip title="Profile">
                   <IconButton onClick={handleProfileMenuOpen}>

@@ -1,0 +1,1 @@
+export { PostApprovedIcon } from './PostApprovedIcon';

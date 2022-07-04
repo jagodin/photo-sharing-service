@@ -48,6 +48,7 @@ export const loader: LoaderFunction = async ({ request }) => {
           },
         },
       },
+      approved: true,
     },
     take: 30,
   });

@@ -32,15 +32,6 @@ export const getPosts = async (
     },
   });
 
-export const getUsersPosts = async (username: string) =>
-  await db.post.findMany({
-    orderBy: { createdAt: 'desc' },
-    where: { author: { username } },
-    include: {
-      author: true,
-    },
-  });
-
 export const likePost = async (user: User, post: Post) =>
   await db.$transaction([
     db.favorites.upsert({

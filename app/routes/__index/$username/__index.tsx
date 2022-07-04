@@ -58,13 +58,35 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     _.omit(following.follower, 'password')
   );
 
+  let posts: (Post & {
+    author: User;
+  })[] = [];
+
+  if (user.userId == currentUser.userId || currentUser.isAdmin) {
+    posts = await db.post.findMany({
+      orderBy: { createdAt: 'desc' },
+      where: { author: { userId: user.userId } },
+      include: {
+        author: true,
+      },
+    });
+  } else {
+    posts = await db.post.findMany({
+      orderBy: { createdAt: 'desc' },
+      where: { author: { userId: user.userId }, approved: true },
+      include: {
+        author: true,
+      },
+    });
+  }
+
   const data: LoaderData = {
     user: _.omit(user, ['password', 'followers', 'following']),
     followers,
     following,
     currentUserFollowing: await userFollowsUser(currentUser, user),
     currentUser,
-    posts: await getUsersPosts(user.username),
+    posts,
   };
   return json(data);
 };

@@ -19,6 +19,7 @@ model User {
   email                       String @unique
   password                    String
   lastLogin                   DateTime?
+  isAdmin                     Boolean @default(false)
   followers                   Follows[] @relation("follower")
   following                   Follows[] @relation("following")
   profilePicture              String?
@@ -56,6 +57,7 @@ model Post {
   favorites     Favorites[]
   notifications Notification[]
   comments      Comment[]
+  approved      Boolean @default(true)
   updatedAt     DateTime @updatedAt
   createdAt     DateTime @default(now())
 }

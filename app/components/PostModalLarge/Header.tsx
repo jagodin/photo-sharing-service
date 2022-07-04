@@ -2,6 +2,7 @@ import { Avatar, Grid, Stack, Typography } from '@mui/material';
 import type { Post, User } from '@prisma/client';
 import { useNavigate } from '@remix-run/react';
 
+import { PostApprovedIcon } from '../PostApprovedIcon';
 import { PostOptionsMenu } from '../PostOptionsMenu';
 
 interface HeaderProps {
@@ -33,7 +34,10 @@ export const Header = ({ post, currentUser }: HeaderProps) => {
           {post.author.username}
         </Typography>
       </Stack>
-      <PostOptionsMenu post={post} currentUser={currentUser} />
+      <Stack alignItems="center" direction="row" spacing={1}>
+        <PostApprovedIcon post={post} />
+        <PostOptionsMenu post={post} currentUser={currentUser} />
+      </Stack>
     </Grid>
   );
 };

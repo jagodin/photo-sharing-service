@@ -18,6 +18,7 @@ import { useNavigate } from '@remix-run/react';
 
 import { FavoriteButton } from '../FavoriteButton';
 import { LikeGroup } from '../LikeGroup';
+import { PostApprovedIcon } from '../PostApprovedIcon';
 import { PostOptionsMenu } from '../PostOptionsMenu';
 
 import { useLoadImage } from '~/hooks/useLoadImage';
@@ -51,7 +52,12 @@ export const Post = ({ post, currentUser }: PostProps) => {
             </Typography>
           </Link>
         }
-        action={<PostOptionsMenu post={post} currentUser={currentUser} />}
+        action={
+          <Stack direction="row" alignItems="center">
+            <PostApprovedIcon post={post} />
+            <PostOptionsMenu post={post} currentUser={currentUser} />
+          </Stack>
+        }
       />
       {imageLoaded ? (
         <CardMedia
