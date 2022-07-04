@@ -1,19 +1,22 @@
-import { MoreVert } from '@mui/icons-material';
-import { Avatar, Grid, IconButton, Stack, Typography } from '@mui/material';
+import { Avatar, Grid, Stack, Typography } from '@mui/material';
 import type { Post, User } from '@prisma/client';
 import { useNavigate } from '@remix-run/react';
+
+import { PostOptionsMenu } from '../PostOptionsMenu';
 
 interface HeaderProps {
   post: Post & {
     author: User;
   };
+  currentUser: Omit<User, 'password'>;
 }
 
-export const Header = ({ post }: HeaderProps) => {
+export const Header = ({ post, currentUser }: HeaderProps) => {
   const navigate = useNavigate();
   const goToProfile = () => {
     navigate(`/${post.author.username}`);
   };
+
   return (
     <Grid
       sx={{ padding: (theme) => theme.spacing(1, 2) }}
@@ -30,9 +33,7 @@ export const Header = ({ post }: HeaderProps) => {
           {post.author.username}
         </Typography>
       </Stack>
-      <IconButton>
-        <MoreVert />
-      </IconButton>
+      <PostOptionsMenu post={post} currentUser={currentUser} />
     </Grid>
   );
 };

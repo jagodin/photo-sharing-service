@@ -59,7 +59,7 @@ export const PostModalLarge = ({
             <CardContent sx={{ padding: 0, height: '100%' }}>
               <Grid container direction="column" sx={{ height: '100%' }}>
                 <Grid item>
-                  <Header post={post} />
+                  <Header currentUser={currentUser} post={post} />
                 </Grid>
                 <Divider />
                 <Grid

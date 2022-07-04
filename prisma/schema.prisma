@@ -63,7 +63,7 @@ model Post {
 model Favorites {
   user    User @relation(fields: [userId], references: [userId])
   userId  Int
-  post    Post @relation(fields: [postId], references: [postId])
+  post    Post @relation(fields: [postId], references: [postId], onDelete: Cascade)
   postId  Int
 
   @@id([userId, postId])
@@ -74,7 +74,7 @@ model Comment {
   content       String
   author        User @relation(fields: [authorId], references: [userId])
   authorId      Int
-  post          Post @relation(fields: [postId], references: [postId])
+  post          Post @relation(fields: [postId], references: [postId], onDelete: Cascade)
   postId        Int
   updatedAt     DateTime @updatedAt
   createdAt     DateTime @default(now())
@@ -87,7 +87,7 @@ model Notification {
   originUser       User @relation(name: "originUser", fields: [originUserId], references: [userId])
   originUserId     Int
   type             NotificationType
-  post             Post? @relation(fields: [postId], references: [postId])
+  post             Post? @relation(fields: [postId], references: [postId], onDelete: Cascade)
   postId           Int?
   updatedAt        DateTime @updatedAt
   createdAt        DateTime @default(now())

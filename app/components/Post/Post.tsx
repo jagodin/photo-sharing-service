@@ -1,4 +1,4 @@
-import { AddComment, MoreVert, Send } from '@mui/icons-material';
+import { AddComment, Send } from '@mui/icons-material';
 import {
   Avatar,
   Card,
@@ -17,6 +17,7 @@ import type { Favorites, Post as PostModal, User } from '@prisma/client';
 
 import { FavoriteButton } from '../FavoriteButton';
 import { LikeGroup } from '../LikeGroup';
+import { PostOptionsMenu } from '../PostOptionsMenu';
 
 import { useLoadImage } from '~/hooks/useLoadImage';
 
@@ -48,11 +49,7 @@ export const Post = ({ post, currentUser }: PostProps) => {
             </Typography>
           </Link>
         }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVert />
-          </IconButton>
-        }
+        action={<PostOptionsMenu post={post} currentUser={currentUser} />}
       />
       {imageLoaded ? (
         <CardMedia
