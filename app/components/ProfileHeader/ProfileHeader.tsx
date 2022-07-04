@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MoreHoriz, Settings } from '@mui/icons-material';
+import { Settings } from '@mui/icons-material';
 import type { AvatarProps } from '@mui/material';
 import {
   Avatar as MuiAvatar,
@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import type { User } from '@prisma/client';
-import { Form } from '@remix-run/react';
+import { Form, useNavigate } from '@remix-run/react';
 
 import { UsersModal } from '../UsersModal';
 
@@ -47,6 +47,7 @@ export const ProfileHeader = ({
 }: ProfileHeaderProps) => {
   const [followersModalOpen, setFollowersModalOpen] = useState(false);
   const [followingModalOpen, setFollowingModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const openFollowersModal = () => {
     setFollowersModalOpen(true);
@@ -110,12 +111,8 @@ export const ProfileHeader = ({
               </Form>
             ))}
 
-          <IconButton>
-            <MoreHoriz />
-          </IconButton>
-
           {currentUserProfile && (
-            <IconButton>
+            <IconButton onClick={() => navigate('/account/edit')}>
               <Settings />
             </IconButton>
           )}
