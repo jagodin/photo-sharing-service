@@ -7,7 +7,7 @@ import { Typography } from '@mui/material';
 import { Avatar, AvatarGroup, Grid } from '@mui/material';
 import type { User } from '@prisma/client';
 
-import { LikesModal } from '../LikesModal';
+import { UsersModal } from '../UsersModal';
 
 interface LikeGroupProps extends AvatarGroupProps {
   users: Omit<User, 'password'>[];
@@ -92,7 +92,7 @@ export const LikeGroup = ({ users, ...props }: LikeGroupProps) => {
         </AvatarGroup>
       </Grid>
       <Grid item>{renderDescription(users)}</Grid>
-      <LikesModal
+      <UsersModal
         users={users}
         open={likesModalOpen}
         onClose={closeLikesModal}

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { MoreHoriz, Settings } from '@mui/icons-material';
 import type { AvatarProps } from '@mui/material';
 import {
@@ -12,19 +13,15 @@ import {
 import type { User } from '@prisma/client';
 import { Form } from '@remix-run/react';
 
+import { UsersModal } from '../UsersModal';
+
 interface ProfileHeaderProps {
-  user: Omit<
-    User & {
-      _count: {
-        posts: number;
-        followers: number;
-        following: number;
-      };
-    },
-    'password'
-  >;
+  user: Omit<User, 'password'>;
+  followers: Omit<User, 'password'>[];
+  following: Omit<User, 'password'>[];
   currentUserFollowing: boolean;
   currentUser: Omit<User, 'password'>;
+  postCount: number;
 }
 
 const Avatar = styled((props: AvatarProps) => <MuiAvatar {...props} />)(
@@ -41,10 +38,32 @@ const Avatar = styled((props: AvatarProps) => <MuiAvatar {...props} />)(
 );
 
 export const ProfileHeader = ({
+  followers,
+  following,
   user,
   currentUserFollowing,
   currentUser,
+  postCount,
 }: ProfileHeaderProps) => {
+  const [followersModalOpen, setFollowersModalOpen] = useState(false);
+  const [followingModalOpen, setFollowingModalOpen] = useState(false);
+
+  const openFollowersModal = () => {
+    setFollowersModalOpen(true);
+  };
+
+  const closeFollowersModal = () => {
+    setFollowersModalOpen(false);
+  };
+
+  const openFollowingModal = () => {
+    setFollowingModalOpen(true);
+  };
+
+  const closeFollowingModal = () => {
+    setFollowingModalOpen(false);
+  };
+
   const currentUserProfile = currentUser.username == user.username;
   return (
     <Grid container alignItems="center" spacing={4}>
@@ -102,9 +121,42 @@ export const ProfileHeader = ({
           )}
         </Stack>
         <Stack alignItems="center" direction="row" spacing={4}>
-          <Typography variant="body1">{`${user._count.posts} posts`}</Typography>
-          <Typography variant="body1">{`${user._count.followers} followers`}</Typography>
-          <Typography variant="body1">{`${user._count.following} following`}</Typography>
+          <Typography
+            fontWeight={600}
+            variant="body1"
+          >{`${postCount} posts`}</Typography>
+          <Typography
+            fontWeight={600}
+            variant="body1"
+            onClick={openFollowersModal}
+            sx={{
+              '&:hover': {
+                textDecoration: 'underline',
+                cursor: 'pointer',
+              },
+            }}
+          >{`${followers.length} followers`}</Typography>
+          <UsersModal
+            users={followers}
+            open={followersModalOpen}
+            onClose={closeFollowersModal}
+          />
+          <Typography
+            fontWeight={600}
+            variant="body1"
+            onClick={openFollowingModal}
+            sx={{
+              '&:hover': {
+                textDecoration: 'underline',
+                cursor: 'pointer',
+              },
+            }}
+          >{`${following.length} following`}</Typography>
+          <UsersModal
+            users={following}
+            open={followingModalOpen}
+            onClose={closeFollowingModal}
+          />
         </Stack>
         <Grid item xs={12}>
           <Typography variant="body1" fontWeight={600}>

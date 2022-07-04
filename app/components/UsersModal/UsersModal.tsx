@@ -9,7 +9,7 @@ interface LikesModalProps {
   onClose: () => void;
 }
 
-export const LikesModal = ({ users, open, onClose }: LikesModalProps) => {
+export const UsersModal = ({ users, open, onClose }: LikesModalProps) => {
   return (
     <Dialog maxWidth="xs" fullWidth open={open} onClose={onClose}>
       <DialogContent>

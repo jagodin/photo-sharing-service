@@ -13,16 +13,9 @@ import { userFollowsUser } from '~/services/follow.server';
 import { getUsersPosts } from '~/services/posts.server';
 
 interface LoaderData {
-  user: Omit<
-    User & {
-      _count: {
-        posts: number;
-        followers: number;
-        following: number;
-      };
-    },
-    'password'
-  >;
+  user: Omit<User, 'password'>;
+  followers: Omit<User, 'password'>[];
+  following: Omit<User, 'password'>[];
   currentUserFollowing: boolean;
   currentUser: Omit<User, 'password'>;
   posts: (Post & {
@@ -40,7 +33,17 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     where: { username: params.username },
     include: {
       _count: {
-        select: { posts: true, followers: true, following: true },
+        select: { posts: true },
+      },
+      followers: {
+        include: {
+          following: true,
+        },
+      },
+      following: {
+        include: {
+          follower: true,
+        },
       },
     },
   });
@@ -48,8 +51,17 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!user)
     throw new Response(`${params.username} not found`, { status: 404 });
 
+  const followers = user.followers.map((follower) =>
+    _.omit(follower.following, 'password')
+  );
+  const following = user.following.map((following) =>
+    _.omit(following.follower, 'password')
+  );
+
   const data: LoaderData = {
-    user: _.omit(user, 'password'),
+    user: _.omit(user, ['password', 'followers', 'following']),
+    followers,
+    following,
     currentUserFollowing: await userFollowsUser(currentUser, user),
     currentUser,
     posts: await getUsersPosts(user.username),
@@ -58,8 +70,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default function Profile() {
-  const { user, currentUserFollowing, currentUser, posts } =
-    useLoaderData<LoaderData>();
+  const {
+    user,
+    currentUserFollowing,
+    currentUser,
+    posts,
+    following,
+    followers,
+  } = useLoaderData<LoaderData>();
 
   return (
     <Grid container spacing={4}>
@@ -69,6 +87,9 @@ export default function Profile() {
           currentUser={currentUser}
           user={user}
           currentUserFollowing={currentUserFollowing}
+          following={following}
+          followers={followers}
+          postCount={posts.length}
         />
       </Grid>
       <Grid item xs={12}>
