@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import type { Favorites, Post as PostModal, User } from '@prisma/client';
+import { useNavigate } from '@remix-run/react';
 
 import { FavoriteButton } from '../FavoriteButton';
 import { LikeGroup } from '../LikeGroup';
@@ -32,6 +33,7 @@ interface PostProps {
 }
 export const Post = ({ post, currentUser }: PostProps) => {
   const { imageLoaded, image } = useLoadImage(post.url);
+  const navigate = useNavigate();
 
   return (
     <Card>
@@ -65,13 +67,12 @@ export const Post = ({ post, currentUser }: PostProps) => {
         <Stack direction="row" spacing={1}>
           <FavoriteButton post={post} currentUser={currentUser} />
           <Tooltip title="Add a comment">
-            <IconButton>
+            <IconButton
+              onClick={() =>
+                navigate(`/${post.author.username}/post/${post.postId}`)
+              }
+            >
               <AddComment />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Share">
-            <IconButton>
-              <Send />
             </IconButton>
           </Tooltip>
         </Stack>

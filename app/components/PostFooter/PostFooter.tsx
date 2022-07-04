@@ -22,13 +22,8 @@ export const PostFooter = ({ post, currentUser }: FooterProps) => {
 
   return (
     <Grid container sx={{ padding: (theme) => theme.spacing(1, 2) }}>
-      <Stack alignItems="center" direction="row">
+      <Stack alignItems="center" direction="row" spacing={1}>
         <FavoriteButton post={post} currentUser={currentUser} />
-        <Tooltip title="Share">
-          <IconButton>
-            <Share />
-          </IconButton>
-        </Tooltip>
         <LikeGroup
           users={post.favorites.map((favorite) => favorite.user)}
           max={3}
