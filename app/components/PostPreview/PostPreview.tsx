@@ -21,7 +21,7 @@ export const PostPreview = ({ post }: PostPreviewProps) => {
 
   return (
     <Card>
-      {imageLoaded ? (
+      {imageLoaded && image ? (
         <CardMedia
           component="img"
           image={image?.src}

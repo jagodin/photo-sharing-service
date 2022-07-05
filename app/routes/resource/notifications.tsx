@@ -15,7 +15,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const notifications = (
     await db.notification.findMany({
-      where: { userId },
+      where: { userId, NOT: { originUserId: userId } },
       include: { originUser: true },
       orderBy: { createdAt: 'desc' },
       take: 10,

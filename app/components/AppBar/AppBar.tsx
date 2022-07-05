@@ -30,6 +30,8 @@ import { ProfileMenu } from '../ProfileMenu';
 
 import { SearchPopover } from './SearchPopover';
 
+import { useWidth } from '~/hooks/useWidth';
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -89,6 +91,7 @@ export const AppBar = ({ user }: AppBarProps) => {
   const [searchInput, setSearchInput] = useState('');
   const [createPostOpen, setCreatePostOpen] = useState(false);
   const { pathname } = useLocation();
+  const width = useWidth();
 
   const handleSearchPopoverOpen = (event: React.MouseEvent<HTMLDivElement>) => {
     setSearchEl(event.currentTarget);
@@ -170,7 +173,13 @@ export const AppBar = ({ user }: AppBarProps) => {
                   user={user}
                 />
 
-                <IconButton onClick={handleNotificationsOpen}>
+                <IconButton
+                  onClick={
+                    width == 'sm' || width == 'xs'
+                      ? () => navigate('/notifications')
+                      : handleNotificationsOpen
+                  }
+                >
                   <Favorite sx={iconStyle} />
                 </IconButton>
 

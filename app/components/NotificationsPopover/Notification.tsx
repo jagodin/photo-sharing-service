@@ -4,18 +4,24 @@ import moment from 'moment';
 
 import { Avatar } from '../Avatar';
 
+import { useWidth } from '~/hooks/useWidth';
+
 interface NotificationProps {
   notification: NotificationModel & { originUser: Omit<User, 'password'> };
 }
 
 export const Notification = ({ notification }: NotificationProps) => {
+  const width = useWidth();
+
+  const smallWidth = width === 'xs';
+
   return (
     <Grid
       item
       xs={12}
       container
       alignItems="center"
-      justifyContent="space-between"
+      justifyContent={smallWidth ? 'flex-start' : 'space-between'}
       spacing={4}
     >
       <Grid item>
@@ -41,11 +47,13 @@ export const Notification = ({ notification }: NotificationProps) => {
           </Typography>
         </Stack>
       </Grid>
-      <Grid item>
-        <Typography variant="subtitle2">
-          {moment(notification.createdAt).fromNow()}
-        </Typography>
-      </Grid>
+      {!smallWidth && (
+        <Grid item>
+          <Typography variant="subtitle2">
+            {moment(notification.createdAt).fromNow()}
+          </Typography>
+        </Grid>
+      )}
     </Grid>
   );
 };

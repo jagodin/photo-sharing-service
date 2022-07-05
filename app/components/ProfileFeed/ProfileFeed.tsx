@@ -3,8 +3,6 @@ import type { Post as PostModal, User } from '@prisma/client';
 
 import { PostPreview } from '../PostPreview';
 
-import { useWidth } from '~/hooks/useWidth';
-
 interface ProfileFeedProps {
   posts: (PostModal & {
     author: User;
@@ -12,10 +10,8 @@ interface ProfileFeedProps {
 }
 
 export const ProfileFeed = ({ posts }: ProfileFeedProps) => {
-  const width = useWidth();
-
   return (
-    <Grid container spacing={width === 'xs' ? 1 : 2}>
+    <Grid alignItems="center" container spacing={1}>
       {posts.map((post) => (
         <Grid key={post.postId} item xs={4}>
           <PostPreview post={post} />
