@@ -24,7 +24,12 @@ export const EditView = ({
   const { image, imageLoaded } = useLoadImage(uploadedImage);
   const width = useWidth();
   return (
-    <Grid container justifyContent="center">
+    <Grid
+      direction={width !== 'sm' && width !== 'xs' ? 'row' : 'column'}
+      gap={width !== 'sm' && width !== 'xs' ? 0 : 2}
+      container
+      justifyContent="center"
+    >
       <Grid item sm={12} md={8}>
         {imageLoaded && image ? (
           <img
@@ -39,15 +44,14 @@ export const EditView = ({
           <Skeleton height={500} width={500} />
         )}
       </Grid>
-      {width !== 'sm' && width !== 'xs' && (
-        <Grid item sm={0} md={4}>
-          <SidePanel
-            postCaption={postCaption}
-            setPostCaption={setPostCaption}
-            user={user}
-          />
-        </Grid>
-      )}
+
+      <Grid item sm={12} md={4}>
+        <SidePanel
+          postCaption={postCaption}
+          setPostCaption={setPostCaption}
+          user={user}
+        />
+      </Grid>
     </Grid>
   );
 };

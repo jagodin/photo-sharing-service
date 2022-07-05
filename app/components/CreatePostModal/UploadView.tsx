@@ -14,7 +14,13 @@ export const UploadView = () => {
     submit(e.currentTarget);
   };
   return (
-    <Grid container justifyContent="center" alignItems="center">
+    <Grid
+      container
+      justifyContent="center"
+      alignItems="center"
+      direction="column"
+      rowGap={3}
+    >
       <Grid item xs={12}>
         <Typography variant="h5">Upload a photo from your device.</Typography>
       </Grid>
