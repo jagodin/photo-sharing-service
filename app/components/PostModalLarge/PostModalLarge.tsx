@@ -1,3 +1,4 @@
+import { ArrowLeft } from '@mui/icons-material';
 import {
   Card,
   CardContent,
@@ -5,6 +6,7 @@ import {
   Dialog,
   Divider,
   Grid,
+  IconButton,
   Skeleton,
 } from '@mui/material';
 import type { Favorites, Post, User } from '@prisma/client';
@@ -12,8 +14,8 @@ import type { Comment as CommentModel } from '@prisma/client';
 
 import { PostFooter } from '../PostFooter';
 
-import { Comment } from './Comment';
 import { Header } from './Header';
+import { PostComment } from './PostComment';
 
 import { useLoadImage } from '~/hooks/useLoadImage';
 import { useWidth } from '~/hooks/useWidth';
@@ -42,13 +44,46 @@ export const PostModalLarge = ({
   const { imageLoaded, image } = useLoadImage(post.url);
   const width = useWidth();
 
-  const smallWidth = width === 'xs' || width === 'sm';
+  const smallWidth = width === 'xs';
 
   return (
-    <Dialog fullWidth={true} maxWidth="lg" open={open} onClose={onClose}>
-      <Card>
-        <Grid container direction={smallWidth ? 'column' : 'row'}>
-          <Grid item xs={12} sm={12} md={7}>
+    <Dialog
+      fullScreen={smallWidth ? true : false}
+      fullWidth={true}
+      maxWidth={smallWidth ? 'lg' : 'xl'}
+      open={open}
+      onClose={onClose}
+    >
+      <Card
+        sx={{
+          '&.MuiCard-root': {
+            height: '100%',
+          },
+        }}
+      >
+        <Grid
+          container
+          sx={{ height: '100%' }}
+          direction={smallWidth ? 'column' : 'row'}
+        >
+          {smallWidth && (
+            <Grid
+              sx={{ padding: (theme) => theme.spacing(0, 1) }}
+              container
+              alignItems="center"
+              item
+            >
+              <Grid item xs={1}>
+                <IconButton onClick={onClose}>
+                  <ArrowLeft />
+                </IconButton>
+              </Grid>
+              <Grid item xs={11}>
+                <Header currentUser={currentUser} post={post} />
+              </Grid>
+            </Grid>
+          )}
+          <Grid item xs={undefined} sm={12} md={7}>
             {imageLoaded ? (
               <CardMedia
                 component="img"
@@ -64,29 +99,35 @@ export const PostModalLarge = ({
             )}
           </Grid>
 
-          <Grid item xs={12} sm={12} md={5}>
+          <Grid item xs={undefined} sm={12} md={5}>
             <CardContent sx={{ padding: 0, height: '100%' }}>
-              <Grid container direction="column" sx={{ height: '100%' }}>
-                <Grid item>
-                  <Header currentUser={currentUser} post={post} />
-                </Grid>
-                <Divider />
+              <Grid
+                container
+                direction="column"
+                sx={{ height: '100%' }}
+                justifyContent="flex-end"
+              >
+                {!smallWidth && (
+                  <>
+                    <Grid item>
+                      <Header currentUser={currentUser} post={post} />
+                    </Grid>
+                    <Divider />
+                  </>
+                )}
                 <Grid
                   container
                   spacing={2}
-                  sx={{ padding: (theme) => theme.spacing(2) }}
+                  sx={{
+                    padding:
+                      post.comments.length > 0
+                        ? (theme) => theme.spacing(2)
+                        : 0,
+                  }}
                 >
-                  {/* <Grid item xs={12}>
-                    <Comment
-                      date={post.createdAt}
-                      author={post.author}
-                      comment={post.description}
-                      currentUser={currentUser}
-                    />
-                  </Grid> */}
                   {post.comments.map((comment) => (
                     <Grid item xs={12} key={comment.commentId}>
-                      <Comment
+                      <PostComment
                         date={comment.createdAt}
                         comment={comment}
                         author={comment.author}

@@ -21,7 +21,7 @@ export const PostFooter = ({ post, currentUser }: FooterProps) => {
   const location = useLocation();
 
   return (
-    <Grid container sx={{ padding: (theme) => theme.spacing(1, 2) }}>
+    <Grid container sx={{ padding: (theme) => theme.spacing(1, 2) }} rowGap={1}>
       <Stack alignItems="center" direction="row" spacing={1}>
         <FavoriteButton post={post} currentUser={currentUser} />
         <LikeGroup

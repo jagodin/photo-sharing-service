@@ -9,19 +9,25 @@ import type { User } from '@prisma/client';
 
 import { UsersModal } from '../UsersModal';
 
+import { useWidth } from '~/hooks/useWidth';
+
 interface LikeGroupProps extends AvatarGroupProps {
   users: Omit<User, 'password'>[];
 }
 
 export const LikeGroup = ({ users, ...props }: LikeGroupProps) => {
   const [likesModalOpen, setLikesModalOpen] = useState(false);
-  const renderDescription = (users: Omit<User, 'password'>[]) => {
+  const width = useWidth();
+  const renderDescription = (
+    users: Omit<User, 'password'>[],
+    width: string
+  ) => {
     if (users.length === 0) {
       return null;
     } else if (users.length === 1) {
       return (
         <Typography variant="subtitle2">
-          Liked by{' '}
+          {width !== 'xs' && 'Liked by '}
           <Link
             fontWeight={600}
             color="text.primary"
@@ -37,7 +43,7 @@ export const LikeGroup = ({ users, ...props }: LikeGroupProps) => {
       const text = othersCount > 1 ? `${othersCount} others` : `1 other`;
       return (
         <Typography variant="subtitle2">
-          Liked by{' '}
+          {width !== 'xs' && 'Liked by '}
           <Link
             fontWeight={600}
             color="text.primary"
@@ -91,7 +97,7 @@ export const LikeGroup = ({ users, ...props }: LikeGroupProps) => {
           ))}
         </AvatarGroup>
       </Grid>
-      <Grid item>{renderDescription(users)}</Grid>
+      <Grid item>{renderDescription(users, width)}</Grid>
       <UsersModal
         users={users}
         open={likesModalOpen}

@@ -22,7 +22,7 @@ interface CommentProps {
   };
 }
 
-export const Comment = ({
+export const PostComment = ({
   author,
   comment,
   date,
@@ -51,7 +51,12 @@ export const Comment = ({
       <Grid item xs={1}>
         <Avatar
           src={author.profilePicture || undefined}
-          sx={{ height: '100%', width: '100%' }}
+          sx={{
+            height: '100%',
+            width: '100%',
+            maxWidth: '30px',
+            maxHeight: '30xp',
+          }}
           onClick={goToProfile}
         />
       </Grid>
