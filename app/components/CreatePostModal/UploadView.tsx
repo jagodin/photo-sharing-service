@@ -20,9 +20,12 @@ export const UploadView = () => {
       alignItems="center"
       direction="column"
       rowGap={3}
+      sx={{ padding: (theme) => theme.spacing(8, 0) }}
     >
       <Grid item xs={12}>
-        <Typography variant="h5">Upload a photo from your device.</Typography>
+        <Typography textAlign="center" variant="h5">
+          Upload a photo from your device.
+        </Typography>
       </Grid>
       <Grid item xs={12}>
         <Form

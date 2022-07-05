@@ -51,7 +51,7 @@ export const Comment = ({
       <Grid item xs={1}>
         <Avatar
           src={author.profilePicture || undefined}
-          sx={{ height: 30, width: 30 }}
+          sx={{ height: '100%', width: '100%' }}
           onClick={goToProfile}
         />
       </Grid>
@@ -80,6 +80,12 @@ export const Comment = ({
                 method="delete"
                 action={`/${post.author.username}/post/${post.postId}/comment`}
               >
+                <input
+                  hidden
+                  readOnly
+                  name="redirectTo"
+                  value={`/${post.author.username}/post/${post.postId}`}
+                />
                 <Button
                   sx={{ borderRadius: 0 }}
                   type="submit"
