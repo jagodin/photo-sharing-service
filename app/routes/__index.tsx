@@ -16,6 +16,8 @@ interface LoaderData {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
+  await authenticateUser(request);
+
   const session = await sessionStorage.getSession(
     request.headers.get('Cookie')
   );

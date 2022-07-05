@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export const useLoadImage = (url: string) => {
+export const useLoadImage = (url: string | null) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
 
@@ -11,7 +11,7 @@ export const useLoadImage = (url: string) => {
   useEffect(() => {
     const image = new Image();
     image.onload = handleImageLoaded;
-    image.src = url;
+    if (url) image.src = url;
     setImage(image);
   }, [url]);
 

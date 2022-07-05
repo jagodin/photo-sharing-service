@@ -4,7 +4,7 @@ import { useFetcher } from '@remix-run/react';
 
 import { UserList } from '../UserList';
 
-import type { UserSearchResponse } from '~/routes/__index/__index/users.$searchString';
+import type { UserSearchResponse } from '~/routes/resource/user.$searchString';
 
 interface SearchPopoverProps {
   onClose: () => void;
@@ -23,7 +23,7 @@ export const SearchPopover = ({
 
   useEffect(() => {
     if (!shouldFetch) return;
-    fetcher.load(`/users/${searchInput}`);
+    fetcher.load(`/resource/user/${searchInput}`);
     setShouldFetch(false);
   }, [searchInput, fetcher, setShouldFetch, shouldFetch]);
 

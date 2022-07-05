@@ -21,9 +21,10 @@ import {
   Tooltip,
 } from '@mui/material';
 import type { User } from '@prisma/client';
-import { useNavigate } from '@remix-run/react';
+import { useLocation, useNavigate } from '@remix-run/react';
 
 import { Avatar } from '../Avatar';
+import { CreatePostModal } from '../CreatePostModal';
 import { NotificationsPopover } from '../NotificationsPopover';
 import { ProfileMenu } from '../ProfileMenu';
 
@@ -86,6 +87,8 @@ export const AppBar = ({ user }: AppBarProps) => {
     null
   );
   const [searchInput, setSearchInput] = useState('');
+  const [createPostOpen, setCreatePostOpen] = useState(false);
+  const { pathname } = useLocation();
 
   const handleSearchPopoverOpen = (event: React.MouseEvent<HTMLDivElement>) => {
     setSearchEl(event.currentTarget);
@@ -113,6 +116,15 @@ export const AppBar = ({ user }: AppBarProps) => {
 
   const handleNotificationsClose = () => {
     setNotificationsEl(null);
+  };
+
+  const openCreatePostModal = () => {
+    setCreatePostOpen(true);
+  };
+
+  const closeCreatePostModal = () => {
+    navigate(pathname);
+    setCreatePostOpen(false);
   };
 
   return (
@@ -148,9 +160,15 @@ export const AppBar = ({ user }: AppBarProps) => {
                   <Home sx={iconStyle} />
                 </IconButton>
 
-                <IconButton onClick={() => navigate('/create')}>
+                <IconButton onClick={openCreatePostModal}>
                   <AddAPhoto sx={iconStyle} />
                 </IconButton>
+
+                <CreatePostModal
+                  open={createPostOpen}
+                  onClose={closeCreatePostModal}
+                  user={user}
+                />
 
                 <IconButton onClick={handleNotificationsOpen}>
                   <Favorite sx={iconStyle} />

@@ -1,6 +1,5 @@
 import { Grid } from '@mui/material';
 import type { Prisma, User } from '@prisma/client';
-import { Outlet } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/server-runtime';
 import { json } from '@remix-run/server-runtime';
@@ -66,7 +65,6 @@ export default function Index() {
   const { posts, user, suggestedUsers } = useLoaderData<LoaderData>();
   return (
     <Grid container spacing={3} sx={{ mb: 4 }}>
-      <Outlet />
       <Grid item xs={12} sm={12} md={8}>
         {posts.length > 0 && <Feed currentUser={user} posts={posts} />}
       </Grid>
