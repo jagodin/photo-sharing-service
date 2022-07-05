@@ -42,11 +42,13 @@ export const PostModalLarge = ({
   const { imageLoaded, image } = useLoadImage(post.url);
   const width = useWidth();
 
+  const smallWidth = width === 'xs' || width === 'sm';
+
   return (
     <Dialog fullWidth={true} maxWidth="lg" open={open} onClose={onClose}>
       <Card>
-        <Grid container>
-          <Grid item sm={12} md={7}>
+        <Grid container direction={smallWidth ? 'column' : 'row'}>
+          <Grid item xs={12} sm={12} md={7}>
             {imageLoaded ? (
               <CardMedia
                 component="img"
@@ -54,23 +56,27 @@ export const PostModalLarge = ({
                 alt={post.description || 'unknown'}
               />
             ) : (
-              <Skeleton height={500} animation="wave" variant="rectangular" />
+              <Skeleton
+                sx={{ width: '100%', height: '100%' }}
+                animation="wave"
+                variant="rectangular"
+              />
             )}
           </Grid>
-          {width !== 'xs' && width !== 'sm' && (
-            <Grid item md={5}>
-              <CardContent sx={{ padding: 0, height: '100%' }}>
-                <Grid container direction="column" sx={{ height: '100%' }}>
-                  <Grid item>
-                    <Header currentUser={currentUser} post={post} />
-                  </Grid>
-                  <Divider />
-                  <Grid
-                    container
-                    spacing={2}
-                    sx={{ padding: (theme) => theme.spacing(2) }}
-                  >
-                    {/* <Grid item xs={12}>
+
+          <Grid item xs={12} sm={12} md={5}>
+            <CardContent sx={{ padding: 0, height: '100%' }}>
+              <Grid container direction="column" sx={{ height: '100%' }}>
+                <Grid item>
+                  <Header currentUser={currentUser} post={post} />
+                </Grid>
+                <Divider />
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{ padding: (theme) => theme.spacing(2) }}
+                >
+                  {/* <Grid item xs={12}>
                     <Comment
                       date={post.createdAt}
                       author={post.author}
@@ -78,33 +84,32 @@ export const PostModalLarge = ({
                       currentUser={currentUser}
                     />
                   </Grid> */}
-                    {post.comments.map((comment) => (
-                      <Grid item xs={12} key={comment.commentId}>
-                        <Comment
-                          date={comment.createdAt}
-                          comment={comment}
-                          author={comment.author}
-                          currentUser={currentUser}
-                          post={post}
-                        />
-                      </Grid>
-                    ))}
-                  </Grid>
-
-                  <Grid
-                    xs
-                    item
-                    justifyContent="flex-end"
-                    direction="column"
-                    container
-                  >
-                    <Divider />
-                    <PostFooter currentUser={currentUser} post={post} />
-                  </Grid>
+                  {post.comments.map((comment) => (
+                    <Grid item xs={12} key={comment.commentId}>
+                      <Comment
+                        date={comment.createdAt}
+                        comment={comment}
+                        author={comment.author}
+                        currentUser={currentUser}
+                        post={post}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
-              </CardContent>
-            </Grid>
-          )}
+
+                <Grid
+                  xs
+                  item
+                  justifyContent="flex-end"
+                  direction="column"
+                  container
+                >
+                  <Divider />
+                  <PostFooter currentUser={currentUser} post={post} />
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Grid>
         </Grid>
       </Card>
     </Dialog>
