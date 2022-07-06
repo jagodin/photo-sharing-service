@@ -16,11 +16,11 @@ import { Form, useNavigate } from '@remix-run/react';
 import { UsersModal } from '../UsersModal';
 
 interface ProfileHeaderProps {
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'email'>;
   followers: Omit<User, 'password'>[];
   following: Omit<User, 'password'>[];
   currentUserFollowing: boolean;
-  currentUser: Omit<User, 'password'>;
+  currentUser: Omit<User, 'password' | 'email'>;
   postCount: number;
 }
 

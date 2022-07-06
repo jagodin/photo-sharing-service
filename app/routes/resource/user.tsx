@@ -5,7 +5,7 @@ import { json } from '@remix-run/server-runtime';
 import { authenticateUser } from '~/services/auth.server';
 
 export interface UserLoaderData {
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'email'>;
 }
 
 export const loader: LoaderFunction = async ({ request }) => {

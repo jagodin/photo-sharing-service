@@ -13,7 +13,7 @@ interface FooterProps {
       user: User;
     })[];
   };
-  currentUser: Omit<User, 'password'>;
+  currentUser: Omit<User, 'password' | 'email'>;
 }
 
 export const PostFooter = ({ post, currentUser }: FooterProps) => {

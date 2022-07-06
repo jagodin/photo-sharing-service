@@ -16,7 +16,7 @@ export const login = async (email: string, password: string) => {
     throw new AuthorizationError('Invalid credentials');
   }
 
-  return _.omit(user, 'password');
+  return _.omit(user, ['password']);
 };
 
 interface RegisterOptions {

@@ -4,7 +4,7 @@ import type { User } from '@prisma/client';
 import { UserList } from '../UserList';
 
 interface LikesModalProps {
-  users: Omit<User, 'password'>[];
+  users: Omit<User, 'password' | 'email'>[];
   open: boolean;
   onClose: () => void;
 }

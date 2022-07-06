@@ -5,7 +5,7 @@ import type { User } from '@prisma/client';
 import { AppBar } from '../AppBar';
 
 interface AppLayoutProps extends PropsWithChildren<unknown> {
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'email'>;
 }
 
 export const AppLayout = ({ children, user }: AppLayoutProps) => {

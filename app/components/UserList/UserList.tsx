@@ -4,7 +4,7 @@ import type { User } from '@prisma/client';
 import { Avatar } from '../Avatar';
 
 interface UserListProps {
-  users: Omit<User, 'password'>[];
+  users: Omit<User, 'password' | 'email'>[];
 }
 
 export const UserList = ({ users }: UserListProps) => {

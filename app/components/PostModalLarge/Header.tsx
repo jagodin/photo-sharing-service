@@ -1,15 +1,15 @@
 import { Avatar, Grid, Stack, Typography } from '@mui/material';
-import type { Post, User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { useNavigate } from '@remix-run/react';
 
 import { PostApprovedIcon } from '../PostApprovedIcon';
 import { PostOptionsMenu } from '../PostOptionsMenu';
 
+import type { PostWithAuthorAndFavorites } from '~/utils/types';
+
 interface HeaderProps {
-  post: Post & {
-    author: User;
-  };
-  currentUser: Omit<User, 'password'>;
+  post: PostWithAuthorAndFavorites;
+  currentUser: Omit<User, 'password' | 'email'>;
 }
 
 export const Header = ({ post, currentUser }: HeaderProps) => {

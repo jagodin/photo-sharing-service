@@ -22,7 +22,7 @@ interface LoaderData {
       user: User;
     })[];
   };
-  currentUser: Omit<User, 'password'>;
+  currentUser: Omit<User, 'password' | 'email'>;
 }
 
 export const loader: LoaderFunction = async ({ params, request }) => {

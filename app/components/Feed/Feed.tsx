@@ -7,7 +7,7 @@ import type { PostWithAuthorAndFavorites } from '~/utils/types';
 
 interface FeedProps {
   posts: PostWithAuthorAndFavorites[];
-  currentUser: Omit<User, 'password'>;
+  currentUser: Omit<User, 'password' | 'email'>;
 }
 
 export const Feed = ({ posts, currentUser }: FeedProps) => {

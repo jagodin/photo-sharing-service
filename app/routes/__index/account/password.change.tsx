@@ -13,7 +13,7 @@ import { changePassword, passwordMatchesHash } from '~/services/user.server';
 import type { Message } from '~/utils/types';
 
 interface LoaderData {
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'email'>;
 }
 
 export const action: ActionFunction = async ({ request }) => {

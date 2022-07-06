@@ -17,7 +17,7 @@ interface ProfileMenuProps {
   onClose: () => void;
   anchorEl: HTMLElement | null;
   setAnchorEl: Dispatch<SetStateAction<HTMLElement | null>>;
-  user?: Omit<User, 'password'>;
+  user?: Omit<User, 'password' | 'email'>;
 }
 
 export const ProfileMenu = ({

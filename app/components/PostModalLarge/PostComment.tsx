@@ -19,7 +19,7 @@ interface CommentProps {
   author: User;
   comment: CommentModel;
   date: Date;
-  currentUser: Omit<User, 'password'>;
+  currentUser: Omit<User, 'password' | 'email'>;
   post: Post & {
     author: User;
   };
@@ -99,7 +99,9 @@ export const PostComment = ({
             <MoreVert />
           </IconButton>
           <Dialog maxWidth="xs" open={optionsOpen} onClose={closeOptions}>
-            <DialogTitle textAlign="center">Delete Comment</DialogTitle>
+            {isCurrentUsersComment && (
+              <DialogTitle textAlign="center">Delete Comment</DialogTitle>
+            )}
             <Grid container direction="column">
               {isCurrentUsersComment && (
                 <Form

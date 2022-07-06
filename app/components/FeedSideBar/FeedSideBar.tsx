@@ -6,8 +6,8 @@ import { Avatar } from '../Avatar';
 import { SuggestedUser } from './SuggestedUser';
 
 interface FeedSideBarProps {
-  user: Omit<User, 'password'>;
-  suggestedUsers: Omit<User, 'password'>[];
+  user: Omit<User, 'password' | 'email'>;
+  suggestedUsers: Omit<User, 'password' | 'email'>[];
 }
 
 export const FeedSideBar = ({ user, suggestedUsers }: FeedSideBarProps) => {

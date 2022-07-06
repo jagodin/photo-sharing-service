@@ -11,8 +11,8 @@ export interface Message {
 }
 
 export type PostWithAuthorAndFavorites = Post & {
-  author: User;
+  author: Omit<User, 'password' | 'email'>;
   favorites: (Favorites & {
-    user: User;
+    user: Omit<User, 'password' | 'email'>;
   })[];
 };

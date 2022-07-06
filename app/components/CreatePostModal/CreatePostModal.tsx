@@ -27,13 +27,13 @@ import { UploadView } from './UploadView';
 interface CreatePostModalProps {
   open: boolean;
   onClose: () => void;
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'email'>;
 }
 
 interface ViewProps {
   currentStep: number;
   uploadedImage: string | null;
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'email'>;
   postCaption: string;
   setPostCaption: Dispatch<SetStateAction<string>>;
 }

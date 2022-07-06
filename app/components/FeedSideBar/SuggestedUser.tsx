@@ -5,7 +5,7 @@ import { Form } from '@remix-run/react';
 import { Avatar } from '../Avatar';
 
 interface SuggestedUserProps {
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'email'>;
 }
 
 export const SuggestedUser = ({ user }: SuggestedUserProps) => {

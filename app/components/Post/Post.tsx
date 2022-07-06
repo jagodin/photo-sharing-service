@@ -13,7 +13,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import type { Favorites, Post as PostModal, User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { useNavigate } from '@remix-run/react';
 
 import { FavoriteButton } from '../FavoriteButton';
@@ -22,15 +22,11 @@ import { PostApprovedIcon } from '../PostApprovedIcon';
 import { PostOptionsMenu } from '../PostOptionsMenu';
 
 import { useLoadImage } from '~/hooks/useLoadImage';
+import type { PostWithAuthorAndFavorites } from '~/utils/types';
 
 interface PostProps {
-  post: PostModal & {
-    author: User;
-    favorites: (Favorites & {
-      user: User;
-    })[];
-  };
-  currentUser: Omit<User, 'password'>;
+  post: PostWithAuthorAndFavorites;
+  currentUser: Omit<User, 'password' | 'email'>;
 }
 export const Post = ({ post, currentUser }: PostProps) => {
   const { imageLoaded, image } = useLoadImage(post.url);

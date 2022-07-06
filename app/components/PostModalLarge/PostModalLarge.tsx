@@ -30,7 +30,7 @@ interface PostModalLargeProps {
       user: User;
     })[];
   };
-  currentUser: Omit<User, 'password'>;
+  currentUser: Omit<User, 'password' | 'email'>;
 }
 
 export const PostModalLarge = ({
@@ -100,7 +100,7 @@ export const PostModalLarge = ({
                   }}
                   spacing={2}
                 >
-                  {post.description !== null && (
+                  {post.description !== null && post.description !== '' && (
                     <Grid item xs={12}>
                       <PostComment
                         date={post.createdAt}

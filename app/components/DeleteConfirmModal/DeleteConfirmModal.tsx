@@ -1,11 +1,10 @@
 import { Button, Dialog, DialogTitle, Stack } from '@mui/material';
-import type { Post, User } from '@prisma/client';
 import { Form } from '@remix-run/react';
 
+import type { PostWithAuthorAndFavorites } from '~/utils/types';
+
 interface DeleteConfirmModalProps {
-  post: Post & {
-    author: User;
-  };
+  post: PostWithAuthorAndFavorites;
   open: boolean;
   onClose: () => void;
   redirectTo: string;

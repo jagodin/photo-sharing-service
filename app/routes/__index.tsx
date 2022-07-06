@@ -11,7 +11,7 @@ import { sessionStorage } from '~/services/session.server';
 import type { Message } from '~/utils/types';
 
 interface LoaderData {
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'email'>;
   message?: Message;
 }
 

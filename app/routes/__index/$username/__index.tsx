@@ -12,11 +12,11 @@ import { db } from '~/services/db.server';
 import { userFollowsUser } from '~/services/follow.server';
 
 interface LoaderData {
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'email'>;
   followers: Omit<User, 'password'>[];
   following: Omit<User, 'password'>[];
   currentUserFollowing: boolean;
-  currentUser: Omit<User, 'password'>;
+  currentUser: Omit<User, 'password' | 'email'>;
   posts: (Post & {
     author: User;
   })[];

@@ -17,7 +17,7 @@ import { Avatar } from '../Avatar';
 interface ChangeAvatarModalProps {
   open: boolean;
   onClose: () => void;
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'email'>;
   uploadedAvatar?: string;
 }
 

@@ -8,15 +8,15 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
-import type { Post, User } from '@prisma/client';
+import type { User } from '@prisma/client';
 
 import { DeleteConfirmModal } from '../DeleteConfirmModal';
 
+import type { PostWithAuthorAndFavorites } from '~/utils/types';
+
 interface PostOptionsMenuProps {
-  post: Post & {
-    author: User;
-  };
-  currentUser: Omit<User, 'password'>;
+  post: PostWithAuthorAndFavorites;
+  currentUser: Omit<User, 'password' | 'email'>;
   redirectAfterDelete: string;
 }
 

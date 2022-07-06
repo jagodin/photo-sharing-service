@@ -1,16 +1,13 @@
 import { Favorite } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
-import type { Favorites, Post, User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { Form, useLocation } from '@remix-run/react';
 
+import type { PostWithAuthorAndFavorites } from '~/utils/types';
+
 interface FavoriteButtonProps {
-  post: Post & {
-    author: User;
-    favorites: (Favorites & {
-      user: User;
-    })[];
-  };
-  currentUser: Omit<User, 'password'>;
+  post: PostWithAuthorAndFavorites;
+  currentUser: Omit<User, 'password' | 'email'>;
 }
 
 export const FavoriteButton = ({ post, currentUser }: FavoriteButtonProps) => {

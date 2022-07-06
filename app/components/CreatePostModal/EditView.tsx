@@ -10,7 +10,7 @@ import { useWidth } from '~/hooks/useWidth';
 
 interface PreviewViewProps {
   uploadedImage: string | null;
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'email'>;
   postCaption: string;
   setPostCaption: Dispatch<SetStateAction<string>>;
 }
@@ -57,7 +57,7 @@ export const EditView = ({
 };
 
 interface SidePanelProps {
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'email'>;
   postCaption: string;
   setPostCaption: Dispatch<SetStateAction<string>>;
 }

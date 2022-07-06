@@ -78,7 +78,7 @@ const iconStyle: SxProps<Theme> = {
 };
 
 interface AppBarProps {
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'password' | 'email'>;
 }
 
 export const AppBar = ({ user }: AppBarProps) => {

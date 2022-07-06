@@ -12,14 +12,14 @@ import { UsersModal } from '../UsersModal';
 import { useWidth } from '~/hooks/useWidth';
 
 interface LikeGroupProps extends AvatarGroupProps {
-  users: Omit<User, 'password'>[];
+  users: Omit<User, 'password' | 'email'>[];
 }
 
 export const LikeGroup = ({ users, ...props }: LikeGroupProps) => {
   const [likesModalOpen, setLikesModalOpen] = useState(false);
   const width = useWidth();
   const renderDescription = (
-    users: Omit<User, 'password'>[],
+    users: Omit<User, 'password' | 'email'>[],
     width: string
   ) => {
     if (users.length === 0) {
