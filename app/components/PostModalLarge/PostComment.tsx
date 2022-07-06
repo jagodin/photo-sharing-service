@@ -57,6 +57,7 @@ export const PostComment = ({
       spacing={1}
       alignItems="center"
       justifyContent="space-between"
+      wrap="nowrap"
     >
       <Grid item>
         <Stack direction="row" alignItems="center" spacing={2}>

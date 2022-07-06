@@ -1,4 +1,3 @@
-import { ArrowLeft } from '@mui/icons-material';
 import {
   Card,
   CardContent,
@@ -6,7 +5,6 @@ import {
   Dialog,
   Divider,
   Grid,
-  IconButton,
   Skeleton,
 } from '@mui/material';
 import type { Comment, Favorites, Post, User } from '@prisma/client';
