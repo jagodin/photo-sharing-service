@@ -119,10 +119,7 @@ export const PostModalLarge = ({
                 <Grid
                   container
                   sx={{
-                    padding:
-                      post.comments.length > 0
-                        ? (theme) => theme.spacing(2)
-                        : 0,
+                    padding: (theme) => theme.spacing(2),
                   }}
                   spacing={2}
                 >
