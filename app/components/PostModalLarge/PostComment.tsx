@@ -16,12 +16,12 @@ import { Form, useNavigate } from '@remix-run/react';
 import moment from 'moment';
 
 interface CommentProps {
-  author: User;
+  author: Omit<User, 'password' | 'email'>;
   comment: CommentModel;
   date: Date;
   currentUser: Omit<User, 'password' | 'email'>;
   post: Post & {
-    author: User;
+    author: Omit<User, 'password' | 'email'>;
   };
   type?: 'comment' | 'description';
 }

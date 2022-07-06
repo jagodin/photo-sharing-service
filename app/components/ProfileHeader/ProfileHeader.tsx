@@ -17,8 +17,8 @@ import { UsersModal } from '../UsersModal';
 
 interface ProfileHeaderProps {
   user: Omit<User, 'password' | 'email'>;
-  followers: Omit<User, 'password'>[];
-  following: Omit<User, 'password'>[];
+  followers: Omit<User, 'password' | 'email'>[];
+  following: Omit<User, 'password' | 'email'>[];
   currentUserFollowing: boolean;
   currentUser: Omit<User, 'password' | 'email'>;
   postCount: number;

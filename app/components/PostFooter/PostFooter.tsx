@@ -8,9 +8,9 @@ import { LikeGroup } from '../LikeGroup';
 
 interface FooterProps {
   post: Post & {
-    author: User;
+    author: Omit<User, 'email' | 'password'>;
     favorites: (Favorites & {
-      user: User;
+      user: Omit<User, 'email' | 'password'>;
     })[];
   };
   currentUser: Omit<User, 'password' | 'email'>;

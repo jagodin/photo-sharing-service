@@ -6,7 +6,7 @@ import { useLoadImage } from '~/hooks/useLoadImage';
 
 interface PostPreviewProps {
   post: Post & {
-    author: User;
+    author: Omit<User, 'email' | 'password'>;
   };
 }
 

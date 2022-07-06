@@ -7,7 +7,9 @@ import { authenticateUser } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 
 export interface NotificationsLoaderData {
-  notifications: (Notification & { originUser: Omit<User, 'password'> })[];
+  notifications: (Notification & {
+    originUser: Omit<User, 'password' | 'email'>;
+  })[];
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -22,7 +24,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     })
   ).map((notification) => ({
     ...notification,
-    originUser: _.omit(notification.originUser, 'password'),
+    originUser: _.omit(notification.originUser, ['password', 'email']),
   }));
 
   return json<NotificationsLoaderData>({

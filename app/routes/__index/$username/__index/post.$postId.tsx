@@ -1,25 +1,22 @@
-import type { Comment, Favorites, Post, User } from '@prisma/client';
+import type { Comment, User } from '@prisma/client';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/server-runtime';
 import { json } from '@remix-run/server-runtime';
 import { redirect } from '@remix-run/server-runtime';
+import _ from 'lodash';
 
 import { PostModalLarge } from '~/components/PostModalLarge';
 import { authenticateUser } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import { sessionStorage } from '~/services/session.server';
-import type { Message } from '~/utils/types';
+import type { Message, PostWithAuthorAndFavorites } from '~/utils/types';
 
 interface LoaderData {
   username: string;
   postId: string;
-  post: Post & {
-    author: User;
+  post: PostWithAuthorAndFavorites & {
     comments: (Comment & {
-      author: User;
-    })[];
-    favorites: (Favorites & {
-      user: User;
+      author: Omit<User, 'password' | 'email'>;
     })[];
   };
   currentUser: Omit<User, 'password' | 'email'>;
@@ -67,7 +64,18 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const data: LoaderData = {
     username: params.username!,
     postId: params.postId!,
-    post,
+    post: {
+      ...post,
+      favorites: post.favorites.map((favorite) => ({
+        ...favorite,
+        user: _.omit(favorite.user, ['email', 'password']),
+      })),
+      author: _.omit(post.author, ['email', 'password']),
+      comments: post.comments.map((comment) => ({
+        ...comment,
+        author: _.omit(comment.author, ['email', 'password']),
+      })),
+    },
     currentUser,
   };
 

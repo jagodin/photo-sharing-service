@@ -17,17 +17,14 @@ import { PostComment } from './PostComment';
 
 import { useLoadImage } from '~/hooks/useLoadImage';
 import { useWidth } from '~/hooks/useWidth';
+import type { PostWithAuthorAndFavorites } from '~/utils/types';
 
 interface PostModalLargeProps {
   open: boolean;
   onClose: () => void;
-  post: Post & {
-    author: User;
-    comments: (CommentModel & {
-      author: User;
-    })[];
-    favorites: (Favorites & {
-      user: User;
+  post: PostWithAuthorAndFavorites & {
+    comments: (Comment & {
+      author: Omit<User, 'password' | 'email'>;
     })[];
   };
   currentUser: Omit<User, 'password' | 'email'>;

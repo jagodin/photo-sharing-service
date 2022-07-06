@@ -13,12 +13,12 @@ import { userFollowsUser } from '~/services/follow.server';
 
 interface LoaderData {
   user: Omit<User, 'password' | 'email'>;
-  followers: Omit<User, 'password'>[];
-  following: Omit<User, 'password'>[];
+  followers: Omit<User, 'password' | 'email'>[];
+  following: Omit<User, 'password' | 'email'>[];
   currentUserFollowing: boolean;
   currentUser: Omit<User, 'password' | 'email'>;
   posts: (Post & {
-    author: User;
+    author: Omit<User, 'password' | 'email'>;
   })[];
 }
 
@@ -51,10 +51,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Response(`${params.username} not found`, { status: 404 });
 
   const followers = user.followers.map((follower) =>
-    _.omit(follower.following, 'password')
+    _.omit(follower.following, ['password', 'email'])
   );
   const following = user.following.map((following) =>
-    _.omit(following.follower, 'password')
+    _.omit(following.follower, ['password', 'email'])
   );
 
   let posts: (Post & {
@@ -85,7 +85,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     following,
     currentUserFollowing: await userFollowsUser(currentUser, user),
     currentUser,
-    posts,
+    posts: posts.map((post) => ({
+      ...post,
+      author: _.omit(post.author, ['email', 'password']),
+    })),
   };
   return json(data);
 };

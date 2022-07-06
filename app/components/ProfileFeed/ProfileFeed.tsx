@@ -5,7 +5,7 @@ import { PostPreview } from '../PostPreview';
 
 interface ProfileFeedProps {
   posts: (PostModal & {
-    author: User;
+    author: Omit<User, 'email' | 'password'>;
   })[];
 }
 
