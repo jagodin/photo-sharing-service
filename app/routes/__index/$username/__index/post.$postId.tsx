@@ -40,6 +40,9 @@ export const loader: LoaderFunction = async ({ params, request }) => {
         include: {
           author: true,
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
       },
     },
   });

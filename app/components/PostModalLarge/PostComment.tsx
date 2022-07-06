@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { MoreVert } from '@mui/icons-material';
 import {
   Avatar,
+  Box,
   Button,
   Dialog,
   Grid,
   IconButton,
+  Stack,
   Typography,
 } from '@mui/material';
 import type { Comment as CommentModel, Post, User } from '@prisma/client';
@@ -20,6 +22,7 @@ interface CommentProps {
   post: Post & {
     author: User;
   };
+  type?: 'comment' | 'description';
 }
 
 export const PostComment = ({
@@ -28,6 +31,7 @@ export const PostComment = ({
   date,
   currentUser,
   post,
+  type = 'comment',
 }: CommentProps) => {
   const [optionsOpen, setOptionsOpen] = useState(false);
   const navigate = useNavigate();
@@ -47,71 +51,91 @@ export const PostComment = ({
   const isCurrentUsersComment = currentUser.username === author.username;
 
   return (
-    <Grid container spacing={1} alignItems="center">
-      <Grid item xs={1}>
-        <Avatar
-          src={author.profilePicture || undefined}
-          sx={{
-            height: '100%',
-            width: '100%',
-            maxWidth: '30px',
-            maxHeight: '30xp',
-          }}
-          onClick={goToProfile}
-        />
+    <Grid
+      container
+      spacing={1}
+      alignItems="center"
+      justifyContent="space-between"
+    >
+      <Grid item xs={11}>
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Avatar
+            src={author.profilePicture || undefined}
+            sx={{
+              height: '100%',
+              width: '100%',
+              maxWidth: '30px',
+              maxHeight: '30xp',
+            }}
+            onClick={goToProfile}
+          />
+          <Typography component="div" variant="body2">
+            <Box
+              onClick={goToProfile}
+              sx={{
+                '&:hover': {
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                },
+                mr: 1,
+              }}
+              display="inline"
+              fontWeight={600}
+            >
+              {author.username}
+            </Box>
+            {comment.content}
+            <Box color="text.secondary" display="inline" sx={{ ml: 1 }}>
+              {moment(date).fromNow()}
+            </Box>
+          </Typography>
+        </Stack>
       </Grid>
-
-      <Grid item xs={10}>
-        <Typography onClick={goToProfile} variant="body2" fontWeight={600}>
-          {author.username}
-        </Typography>
-        <Typography variant="body1">{comment.content}</Typography>
-        <Typography variant="subtitle2">{moment(date).fromNow()}</Typography>
-      </Grid>
-
-      <Grid item xs={1}>
-        <IconButton onClick={openOptions}>
-          <MoreVert />
-        </IconButton>
-        <Dialog
-          fullWidth
-          maxWidth="xs"
-          open={optionsOpen}
-          onClose={closeOptions}
-        >
-          <Grid container direction="column">
-            {isCurrentUsersComment && (
-              <Form
-                method="delete"
-                action={`/${post.author.username}/post/${post.postId}/comment`}
-              >
-                <input
-                  hidden
-                  readOnly
-                  name="redirectTo"
-                  value={`/${post.author.username}/post/${post.postId}`}
-                />
-                <Button
-                  sx={{ borderRadius: 0 }}
-                  type="submit"
-                  name="commentId"
-                  value={comment.commentId}
-                  fullWidth
-                  color="error"
+      {type == 'comment' && (
+        <Grid item xs={1}>
+          <IconButton onClick={openOptions}>
+            <MoreVert />
+          </IconButton>
+          <Dialog
+            fullWidth
+            maxWidth="xs"
+            open={optionsOpen}
+            onClose={closeOptions}
+          >
+            <Grid container direction="column">
+              {isCurrentUsersComment && (
+                <Form
+                  method="delete"
+                  action={`/${post.author.username}/post/${post.postId}/comment`}
                 >
-                  Delete
-                </Button>
-              </Form>
-            )}
-            <Button sx={{ borderRadius: 0 }} fullWidth>
-              Report
-            </Button>
-            <Button sx={{ borderRadius: 0 }} fullWidth onClick={closeOptions}>
-              Cancel
-            </Button>
-          </Grid>
-        </Dialog>
-      </Grid>
+                  <input
+                    hidden
+                    readOnly
+                    name="redirectTo"
+                    value={`/${post.author.username}/post/${post.postId}`}
+                  />
+                  <Button
+                    sx={{ borderRadius: 0 }}
+                    type="submit"
+                    name="commentId"
+                    value={comment.commentId}
+                    fullWidth
+                    color="error"
+                  >
+                    Delete
+                  </Button>
+                </Form>
+              )}
+              <Button sx={{ borderRadius: 0 }} fullWidth>
+                Report
+              </Button>
+              <Button sx={{ borderRadius: 0 }} fullWidth onClick={closeOptions}>
+                Cancel
+              </Button>
+            </Grid>
+          </Dialog>
+        </Grid>
+      )}
     </Grid>
   );
 };

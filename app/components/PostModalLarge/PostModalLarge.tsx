@@ -9,7 +9,7 @@ import {
   IconButton,
   Skeleton,
 } from '@mui/material';
-import type { Favorites, Post, User } from '@prisma/client';
+import type { Comment, Favorites, Post, User } from '@prisma/client';
 import type { Comment as CommentModel } from '@prisma/client';
 
 import { PostFooter } from '../PostFooter';
@@ -53,6 +53,7 @@ export const PostModalLarge = ({
       maxWidth={smallWidth ? 'lg' : 'xl'}
       open={open}
       onClose={onClose}
+      scroll="body"
     >
       <Card
         sx={{
@@ -117,14 +118,26 @@ export const PostModalLarge = ({
                 )}
                 <Grid
                   container
-                  spacing={2}
                   sx={{
                     padding:
                       post.comments.length > 0
                         ? (theme) => theme.spacing(2)
                         : 0,
                   }}
+                  spacing={2}
                 >
+                  {post.description !== null && (
+                    <Grid item xs={12}>
+                      <PostComment
+                        date={post.createdAt}
+                        comment={{ content: post.description } as Comment}
+                        author={post.author}
+                        currentUser={currentUser}
+                        post={post}
+                        type="description"
+                      />
+                    </Grid>
+                  )}
                   {post.comments.map((comment) => (
                     <Grid item xs={12} key={comment.commentId}>
                       <PostComment
