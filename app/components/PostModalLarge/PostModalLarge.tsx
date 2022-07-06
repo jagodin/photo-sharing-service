@@ -48,7 +48,6 @@ export const PostModalLarge = ({
 
   return (
     <Dialog
-      fullScreen={smallWidth ? true : false}
       fullWidth={true}
       maxWidth={smallWidth ? 'lg' : 'xl'}
       open={open}
@@ -67,24 +66,7 @@ export const PostModalLarge = ({
           sx={{ height: '100%' }}
           direction={smallWidth ? 'column' : 'row'}
         >
-          {smallWidth && (
-            <Grid
-              sx={{ padding: (theme) => theme.spacing(0, 1) }}
-              container
-              alignItems="center"
-              item
-            >
-              <Grid item xs={1}>
-                <IconButton onClick={onClose}>
-                  <ArrowLeft />
-                </IconButton>
-              </Grid>
-              <Grid item xs={11}>
-                <Header currentUser={currentUser} post={post} />
-              </Grid>
-            </Grid>
-          )}
-          <Grid item xs={undefined} sm={12} md={7}>
+          <Grid item xs={5} sm={12} md={7}>
             {imageLoaded ? (
               <CardMedia
                 component="img"
@@ -100,7 +82,7 @@ export const PostModalLarge = ({
             )}
           </Grid>
 
-          <Grid item xs={undefined} sm={12} md={5}>
+          <Grid item xs={true} sm={12} md={5}>
             <CardContent sx={{ padding: 0, height: '100%' }}>
               <Grid
                 container
@@ -108,14 +90,11 @@ export const PostModalLarge = ({
                 sx={{ height: '100%' }}
                 justifyContent="flex-end"
               >
-                {!smallWidth && (
-                  <>
-                    <Grid item>
-                      <Header currentUser={currentUser} post={post} />
-                    </Grid>
-                    <Divider />
-                  </>
-                )}
+                <Grid item>
+                  <Header currentUser={currentUser} post={post} />
+                </Grid>
+                <Divider />
+
                 <Grid
                   container
                   sx={{

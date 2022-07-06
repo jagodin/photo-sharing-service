@@ -65,9 +65,6 @@ export const PostOptionsMenu = ({
           </ListItemIcon>
           <ListItemText>Report</ListItemText>
         </MenuItem>
-        <MenuItem onClick={closeMenu}>
-          <ListItemText>Cancel</ListItemText>
-        </MenuItem>
       </Menu>
       <DeleteConfirmModal
         open={deleteConfirmOpen}

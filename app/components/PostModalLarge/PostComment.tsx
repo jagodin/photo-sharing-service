@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Dialog,
+  DialogTitle,
   Grid,
   IconButton,
   Stack,
@@ -57,7 +58,7 @@ export const PostComment = ({
       alignItems="center"
       justifyContent="space-between"
     >
-      <Grid item xs={11}>
+      <Grid item>
         <Stack direction="row" alignItems="center" spacing={2}>
           <Avatar
             src={author.profilePicture || undefined}
@@ -92,16 +93,12 @@ export const PostComment = ({
         </Stack>
       </Grid>
       {type == 'comment' && (
-        <Grid item xs={1}>
+        <Grid item>
           <IconButton onClick={openOptions}>
             <MoreVert />
           </IconButton>
-          <Dialog
-            fullWidth
-            maxWidth="xs"
-            open={optionsOpen}
-            onClose={closeOptions}
-          >
+          <Dialog maxWidth="xs" open={optionsOpen} onClose={closeOptions}>
+            <DialogTitle textAlign="center">Delete Comment</DialogTitle>
             <Grid container direction="column">
               {isCurrentUsersComment && (
                 <Form
@@ -128,9 +125,6 @@ export const PostComment = ({
               )}
               <Button sx={{ borderRadius: 0 }} fullWidth>
                 Report
-              </Button>
-              <Button sx={{ borderRadius: 0 }} fullWidth onClick={closeOptions}>
-                Cancel
               </Button>
             </Grid>
           </Dialog>
