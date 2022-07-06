@@ -7,7 +7,9 @@ import { Avatar } from '../Avatar';
 import { useWidth } from '~/hooks/useWidth';
 
 interface NotificationProps {
-  notification: NotificationModel & { originUser: Omit<User, 'password'> };
+  notification: NotificationModel & {
+    originUser: Omit<User, 'password' | 'email'>;
+  };
 }
 
 export const Notification = ({ notification }: NotificationProps) => {

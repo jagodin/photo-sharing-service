@@ -7,8 +7,7 @@ import {
   Grid,
   Skeleton,
 } from '@mui/material';
-import type { Comment, Favorites, Post, User } from '@prisma/client';
-import type { Comment as CommentModel } from '@prisma/client';
+import type { Comment, User } from '@prisma/client';
 
 import { PostFooter } from '../PostFooter';
 

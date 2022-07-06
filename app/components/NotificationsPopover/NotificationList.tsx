@@ -4,7 +4,9 @@ import type { Notification as NotificationModel, User } from '@prisma/client';
 import { Notification } from './Notification';
 
 interface NotificationsListProps {
-  notifications: (NotificationModel & { originUser: Omit<User, 'password'> })[];
+  notifications: (NotificationModel & {
+    originUser: Omit<User, 'password' | 'email'>;
+  })[];
 }
 export const NotificationList = ({ notifications }: NotificationsListProps) => {
   return (
