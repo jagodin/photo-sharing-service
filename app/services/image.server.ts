@@ -6,9 +6,15 @@ import {
 } from '@remix-run/node';
 import AWS from 'aws-sdk';
 import { PassThrough } from 'stream';
+import { v4 as uuid } from 'uuid';
 
-const { S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, S3_REGION, S3_BUCKET_NAME } =
-  process.env;
+const {
+  S3_ACCESS_KEY_ID,
+  S3_SECRET_ACCESS_KEY,
+  S3_REGION,
+  S3_BUCKET_NAME,
+  SLS_STAGE,
+} = process.env;
 
 if (
   !(S3_ACCESS_KEY_ID && S3_SECRET_ACCESS_KEY && S3_REGION && S3_BUCKET_NAME)
@@ -29,7 +35,7 @@ const uploadStream = ({ Key }: Pick<AWS.S3.Types.PutObjectRequest, 'Key'>) => {
     writeStream: pass,
     promise: s3
       .upload({
-        Bucket: 'photo-sharing-service-dev-dev-dev',
+        Bucket: S3_BUCKET_NAME + '-' + SLS_STAGE,
         Key,
         Body: pass,
         ContentType: 'image/png',
@@ -38,17 +44,17 @@ const uploadStream = ({ Key }: Pick<AWS.S3.Types.PutObjectRequest, 'Key'>) => {
   };
 };
 
-export async function uploadStreamToS3(data: any, filename: string) {
+export async function uploadStreamToS3(data: AsyncIterable<Uint8Array>) {
   const stream = uploadStream({
-    Key: 'website/images/' + filename,
+    Key: 'website/images/' + uuid(),
   });
   await writeAsyncIterableToWritable(data, stream.writeStream);
   const file = await stream.promise;
   return file;
 }
 
-export const s3UploadHandler: UploadHandler = async ({ filename, data }) => {
-  const uploaded = await uploadStreamToS3(data, filename!);
+export const s3UploadHandler: UploadHandler = async ({ data }) => {
+  const uploaded = await uploadStreamToS3(data);
   return (
     'https://' +
     process.env.DEV_HOST +

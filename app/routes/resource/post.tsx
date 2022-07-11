@@ -1,6 +1,6 @@
 import type { ActionFunction } from '@remix-run/server-runtime';
 import { redirect } from '@remix-run/server-runtime';
-import { parseMultipartFormData } from '@remix-run/server-runtime/formData';
+import { unstable_parseMultipartFormData } from '@remix-run/server-runtime';
 
 import { authenticateUser } from '~/services/auth.server';
 import { db } from '~/services/db.server';
@@ -27,7 +27,11 @@ export const action: ActionFunction = async ({ request }) => {
     throw new Response("Expected 'redirectTo' form entry.", { status: 400 });
   switch (formData.get('action')) {
     case 'upload': {
-      const imgFormData = await parseMultipartFormData(request, uploadHandler);
+      const imgFormData = await unstable_parseMultipartFormData(
+        request,
+        uploadHandler
+      );
+
       const imgSrc = imgFormData.get('post') as string;
 
       if (!imgSrc) {

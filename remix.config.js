@@ -10,5 +10,4 @@ module.exports = {
   server: './server.ts',
   serverBuildPath: 'build/index.js',
   ignoredRouteFiles: ['.*'],
-  serverDependenciesToBundle: ['use-breakpoint'],
 };

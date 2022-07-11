@@ -44,7 +44,11 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   if (!post)
     throw new Response(`Post ${params.postId} not found.`, { status: 404 });
 
-  if (!post.approved && !currentUser.isAdmin) {
+  if (
+    !post.approved &&
+    !currentUser.isAdmin &&
+    post.authorId !== currentUser.userId
+  ) {
     const session = await sessionStorage.getSession(
       request.headers.get('Cookie')
     );

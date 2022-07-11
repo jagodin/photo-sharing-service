@@ -67,7 +67,7 @@ export const PostComment = ({
               height: '100%',
               width: '100%',
               maxWidth: '30px',
-              maxHeight: '30xp',
+              maxHeight: '30px',
             }}
             onClick={goToProfile}
           />

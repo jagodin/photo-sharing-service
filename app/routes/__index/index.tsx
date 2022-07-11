@@ -75,7 +75,7 @@ export default function Index() {
   return (
     <Grid container spacing={3} sx={{ mb: 4 }}>
       <Grid item xs={12} sm={12} md={8}>
-        {posts.length > 0 && <Feed currentUser={user} posts={posts} />}
+        <Feed currentUser={user} posts={posts} />
       </Grid>
       <Grid item sm={0} md={4}>
         <FeedSideBar suggestedUsers={suggestedUsers} user={user} />

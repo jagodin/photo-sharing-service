@@ -29,7 +29,12 @@ export const PostPreview = ({ post }: PostPreviewProps) => {
           onClick={openPostModal}
         />
       ) : (
-        <Skeleton height={205} animation="wave" variant="rectangular" />
+        <Skeleton
+          onClick={openPostModal}
+          height={205}
+          animation="wave"
+          variant="rectangular"
+        />
       )}
     </Card>
   );

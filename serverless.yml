@@ -2,33 +2,30 @@ service: 'photo-sharing-service'
 
 frameworkVersion: '2'
 
-package:
-    individually: true
-
 plugins:
-    - serverless-esbuild
+    # - serverless-esbuild
     - serverless-s3-sync
-    - serverless-offline
+    - serverless-plugin-scripts
+	
+variablesResolutionMode: 20210326
 
 custom:
-    # stage-specific variables
     photosBucketName: ${env:S3_BUCKET_NAME}
     dev:
         HOST: ${env:DEV_HOST}
     # prod:
     #     HOST: my-domain.com # replace with your production url
     # serverless-esbuild config, bundles your code and allows you to use typescript or es-next features in your handler code
-    esbuild:
-        bundle: true
-        minify: false
-        sourcemap: true
-        sourcesContent: false
-
-        exclude: ['aws-sdk']
-        target: 'node14'
-        define:
-            'require.resolve': null
-        platform: 'node'
+    # esbuild:
+    #     bundle: true
+    #     minify: false
+    #     sourcemap: true
+    #     sourcesContent: false
+    #     exclude: ['aws-sdk']
+    #     target: 'node14'
+    #     define:
+    #         'require.resolve': null
+    #     platform: 'node'
     # serverless-s3-sync config, handles uploading static files to S3
     s3Sync:
         buckets:
@@ -40,44 +37,77 @@ custom:
                         CacheControl: 'public, max-age=3600'
                   - 'static/**/*':
                         CacheControl: 'public, max-age=31536000, immutable'
+    scripts:
+        hooks:
+            'aws:deploy:finalize:cleanup': ${file(./scripts/post-deployment.js)}
 
 provider:
     name: aws
     runtime: nodejs14.x
     stage: ${opt:stage, 'dev'}
     region: ${opt:region, 'us-east-1'}
+    timeout: 120
     environment:
         AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
         NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000'
-        DATABASE_URL: ${env:DATABASE_URL}
+        DATABASE_URL: 
+            !Join
+                - ''
+                - - 'postgresql://'
+                  - !Sub '{{resolve:secretsmanager:${DatabaseSecret}:SecretString:username}}'
+                  - ':'
+                  - !Sub '{{resolve:secretsmanager:${DatabaseSecret}:SecretString:password}}'
+                  - '@'
+                  - !GetAtt 'DBCluster.Endpoint.Address'
+                  - ':'
+                  - !GetAtt 'DBCluster.Endpoint.Port'
+                  - '/photosharingservice?schema=public'
         SESSION_SECRET: ${env:SESSION_SECRET}
         S3_ACCESS_KEY_ID: ${env:S3_ACCESS_KEY_ID}
         S3_SECRET_ACCESS_KEY: ${env:S3_SECRET_ACCESS_KEY}
         S3_REGION: ${env:S3_REGION}
         S3_BUCKET_NAME: ${env:S3_BUCKET_NAME}
+        SLS_STAGE: ${self:provider.stage}
+        DEV_HOST: !GetAtt 'CDN.DomainName'
     lambdaHashingVersion: '20201221'
     ecr:
       images:
-        appimage:
+        photo-sharing-service:
           path: ./
+        db-init:
+          path: ./
+          file: functions/migrate/Dockerfile
+    vpc:
+        securityGroupIds:
+            - Ref: DatabaseSecurityGroup
+        subnetIds:
+            - Ref: Subnet1
+            - Ref: Subnet2
+            - Ref: Subnet3
 
 functions:
   photo-sharing-service:
     image:
-      name: appimage
+      name: photo-sharing-service
     description: A simple Photo Sharing network built with Remix.
     events:
         - httpApi:
               method: any
               path: '/{proxy+}'
+
+  dbInit:
+    image:
+      name: db-init
+    timeout: 120
+
 resources:
     Resources:
         # Created by serverless
-        # HttpApi:
-        #   Type: AWS::ApiGatewayV2::Api
-        #   Properties:
-        #     Name: ${self:provider.stage}-${self:service}
-        #     ProtocolType: HTTP
+        HttpApi:
+          Type: AWS::ApiGatewayV2::Api
+          Properties:
+            Name: ${self:provider.stage}-${self:service}
+            ProtocolType: HTTP
 
         # S3 bucket for static assets
         WebsiteBucket:
@@ -161,9 +191,15 @@ resources:
                             [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
                         CachedMethods: [GET, HEAD, OPTIONS]
                         Compress: true
-                        CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 #Managed-OptimizedCache
                         TargetOriginId: RemixOrigin
                         ViewerProtocolPolicy: redirect-to-https
+                        DefaultTTL: 0
+                        MaxTTL: 0
+                        MinTTL: 0
+                        ForwardedValues:
+                            QueryString: true
+                            Cookies:
+                                  Forward: all
                     # Requests to /static go to S3
                     CacheBehaviors:
                         - PathPattern: 'images/*'
@@ -191,7 +227,7 @@ resources:
                           ForwardedValues:
                               QueryString: true
                               Cookies:
-                                  Forward: none
+                                  Forward: all
                           TargetOriginId: StaticOrigin
                           ViewerProtocolPolicy: redirect-to-https
                         # Special rule for browser favicon requests to also go to S3 origin
@@ -215,6 +251,78 @@ resources:
                     PriceClass: PriceClass_100
                     ViewerCertificate:
                         CloudFrontDefaultCertificate: true
+
+        ServerlessVPC:
+            Type: AWS::EC2::VPC
+            Properties:
+                CidrBlock: 10.192.0.0/16
+                EnableDnsSupport: true
+                EnableDnsHostnames: true
+                Tags:
+                    - {Key: Name, Value: !Ref AWS::StackName} # the console will display this as the name
+        
+        Subnet1:
+            Type: AWS::EC2::Subnet
+            Properties: 
+                CidrBlock: 10.192.0.0/20
+                AvailabilityZone: !Select [0, !GetAZs '']
+                VpcId: !Ref ServerlessVPC
+        Subnet2:
+            Type: AWS::EC2::Subnet
+            Properties: 
+                CidrBlock: 10.192.16.0/20
+                AvailabilityZone: !Select [1, !GetAZs '']
+                VpcId: !Ref ServerlessVPC
+        Subnet3:
+            Type: AWS::EC2::Subnet
+            Properties: 
+                CidrBlock: 10.192.32.0/20
+                AvailabilityZone: !Select [2, !GetAZs '']
+                VpcId: !Ref ServerlessVPC
+        
+        # subnet and security groups for the database later 
+        DatabaseSubnetGroup:
+            Type: AWS::RDS::DBSubnetGroup
+            Properties: 
+                DBSubnetGroupDescription: Database
+                SubnetIds: [!Ref Subnet1, !Ref Subnet2, !Ref Subnet3]
+        DatabaseSecurityGroup:
+            Type: AWS::EC2::SecurityGroup
+            Properties:
+                GroupDescription: Database
+                VpcId: !Ref ServerlessVPC
+                SecurityGroupIngress:
+                    - {CidrIp: !GetAtt ServerlessVPC.CidrBlock, FromPort: 5432, ToPort: 5432, IpProtocol: tcp}
+        
+        DatabaseSecret:
+            Type: AWS::SecretsManager::Secret
+            Properties:
+                Name: !Sub '/${AWS::StackName}/database/root'
+                GenerateSecretString:
+                    SecretStringTemplate: '{"username": "root"}'
+                    GenerateStringKey: "password"
+                    ExcludeCharacters: '"@/\'
+                    ExcludePunctuation: true
+                    
+
+        DBCluster:
+            Type: 'AWS::RDS::DBCluster'
+            Properties:
+                MasterUsername: !Sub '{{resolve:secretsmanager:${DatabaseSecret}:SecretString:username}}'
+                MasterUserPassword: !Sub '{{resolve:secretsmanager:${DatabaseSecret}:SecretString:password}}'
+                DBClusterIdentifier: photo-sharing-service-${self:provider.stage}
+                DatabaseName: photosharingservice
+                Engine: aurora-postgresql
+                EngineVersion: 10.7
+                EngineMode: serverless
+                DBSubnetGroupName: !Ref DatabaseSubnetGroup
+                VpcSecurityGroupIds: [!Ref DatabaseSecurityGroup]
+                ScalingConfiguration:
+                    AutoPause: true
+                    MinCapacity: 2
+                    MaxCapacity: 4
+                    SecondsUntilAutoPause: 1000
+    
     Outputs:
         WebsiteBucketName:
             Value:

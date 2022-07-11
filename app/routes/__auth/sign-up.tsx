@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { LockOutlined } from '@mui/icons-material';
 import {
   Avatar,
@@ -19,6 +18,7 @@ import { authenticator } from '~/services/auth.server';
 import { register } from '~/services/user.server';
 
 export const action: ActionFunction = async ({ request }) => {
+  const requestClone = request.clone();
   const formData = await request.formData();
 
   const email = formData.get('email') as string;
@@ -29,7 +29,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   await register({ email, password, firstName, lastName, username });
 
-  return await authenticator.authenticate('form', request, {
+  return await authenticator.authenticate('form', requestClone, {
     successRedirect: '/',
   });
 };
