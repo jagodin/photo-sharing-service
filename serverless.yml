@@ -46,7 +46,7 @@ provider:
     runtime: nodejs14.x
     stage: ${opt:stage, 'dev'}
     region: ${opt:region, 'us-east-1'}
-    timeout: 120
+    timeout: 30
     environment:
         AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
         NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000'
@@ -66,8 +66,7 @@ provider:
         S3_ACCESS_KEY_ID: ${env:S3_ACCESS_KEY_ID}
         S3_SECRET_ACCESS_KEY: ${env:S3_SECRET_ACCESS_KEY}
         S3_REGION: ${env:S3_REGION}
-        S3_BUCKET_NAME: ${env:S3_BUCKET_NAME}
-        SLS_STAGE: ${self:provider.stage}
+        S3_BUCKET_NAME: !Ref PhotosBucket
         DEV_HOST: !GetAtt 'CDN.DomainName'
     lambdaHashingVersion: '20201221'
     ecr:
@@ -98,7 +97,7 @@ functions:
   dbInit:
     image:
       name: db-init
-    timeout: 120
+    timeout: 30
 
 resources:
     Resources:
@@ -108,6 +107,38 @@ resources:
           Properties:
             Name: ${self:provider.stage}-${self:service}
             ProtocolType: HTTP
+
+        PhotosBucket:
+            Type: AWS::S3::Bucket
+            Properties:
+                BucketName: !Sub ${self:service}-${self:provider.stage}-images
+
+        PhotosOriginAccessIdentity:
+            Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+            Properties:
+                CloudFrontOriginAccessIdentityConfig:
+                    Comment: Origin Access Identity to Access ${self:service} Photos Bucket ${self:provider.stage}
+        PhotosBucketPolicy:
+            Type: AWS::S3::BucketPolicy
+            Properties:
+                Bucket: !Ref PhotosBucket
+                PolicyDocument:
+                    Statement:
+                        - Effect: Allow
+                          Action:
+                              - s3:GetObject
+                          Resource:
+                              Fn::Join:
+                                  - /
+                                  - - Fn::GetAtt:
+                                          - PhotosBucket
+                                          - Arn
+                                    - '*'
+                          Principal:
+                              CanonicalUser:
+                                  Fn::GetAtt:
+                                      - PhotosOriginAccessIdentity
+                                      - S3CanonicalUserId
 
         # S3 bucket for static assets
         WebsiteBucket:
@@ -147,11 +178,24 @@ resources:
         CDN:
             Type: AWS::CloudFront::Distribution
             DependsOn:
+                - PhotosBucket
                 - WebsiteBucket
                 - HttpApi
             Properties:
                 DistributionConfig:
                     Origins:
+                        - DomainName:
+                              Fn::GetAtt:
+                                  - PhotosBucket
+                                  - DomainName
+                          Id: PhotosOrigin
+                          S3OriginConfig:
+                              OriginAccessIdentity:
+                                  Fn::Join:
+                                      - /
+                                      - - origin-access-identity
+                                        - cloudfront
+                                        - !Ref PhotosOriginAccessIdentity
                         - DomainName:
                               Fn::GetAtt:
                                   - WebsiteBucket
@@ -214,7 +258,7 @@ resources:
                               QueryString: true
                               Cookies:
                                   Forward: none
-                          TargetOriginId: StaticOrigin
+                          TargetOriginId: PhotosOrigin
                           ViewerProtocolPolicy: redirect-to-https
                         - PathPattern: 'static/*'
                           AllowedMethods:

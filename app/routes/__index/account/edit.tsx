@@ -11,9 +11,8 @@ import { authenticateUser } from '~/services/auth.server';
 import { db } from '~/services/db.server';
 import { uploadHandler } from '~/services/image.server';
 import { sessionStorage } from '~/services/session.server';
-import type { ValidationError } from '~/services/user.server';
 import { updateUser } from '~/services/user.server';
-import type { Message } from '~/utils/types';
+import type { Message, ValidationError } from '~/utils/types';
 
 interface LoaderData {
   user: Omit<User, 'password'>;

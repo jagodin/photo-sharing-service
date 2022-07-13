@@ -30,7 +30,7 @@ export const action: ActionFunction = async ({ request }) => {
   await register({ email, password, firstName, lastName, username });
 
   return await authenticator.authenticate('form', requestClone, {
-    successRedirect: '/',
+    successRedirect: '/avatar',
   });
 };
 

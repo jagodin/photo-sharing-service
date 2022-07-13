@@ -8,13 +8,8 @@ import AWS from 'aws-sdk';
 import { PassThrough } from 'stream';
 import { v4 as uuid } from 'uuid';
 
-const {
-  S3_ACCESS_KEY_ID,
-  S3_SECRET_ACCESS_KEY,
-  S3_REGION,
-  S3_BUCKET_NAME,
-  SLS_STAGE,
-} = process.env;
+const { S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, S3_REGION, S3_BUCKET_NAME } =
+  process.env;
 
 if (
   !(S3_ACCESS_KEY_ID && S3_SECRET_ACCESS_KEY && S3_REGION && S3_BUCKET_NAME)
@@ -35,7 +30,7 @@ const uploadStream = ({ Key }: Pick<AWS.S3.Types.PutObjectRequest, 'Key'>) => {
     writeStream: pass,
     promise: s3
       .upload({
-        Bucket: S3_BUCKET_NAME + '-' + SLS_STAGE,
+        Bucket: S3_BUCKET_NAME,
         Key,
         Body: pass,
         ContentType: 'image/png',
@@ -46,7 +41,7 @@ const uploadStream = ({ Key }: Pick<AWS.S3.Types.PutObjectRequest, 'Key'>) => {
 
 export async function uploadStreamToS3(data: AsyncIterable<Uint8Array>) {
   const stream = uploadStream({
-    Key: 'website/images/' + uuid(),
+    Key: 'images/' + uuid(),
   });
   await writeAsyncIterableToWritable(data, stream.writeStream);
   const file = await stream.promise;
@@ -55,12 +50,7 @@ export async function uploadStreamToS3(data: AsyncIterable<Uint8Array>) {
 
 export const s3UploadHandler: UploadHandler = async ({ data }) => {
   const uploaded = await uploadStreamToS3(data);
-  return (
-    'https://' +
-    process.env.DEV_HOST +
-    '/' +
-    uploaded.Key.replace('website/', '')
-  );
+  return 'https://' + process.env.DEV_HOST + '/' + uploaded.Key;
 };
 
 export const uploadHandler: UploadHandler = composeUploadHandlers(
