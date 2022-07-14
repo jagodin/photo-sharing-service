@@ -13,8 +13,13 @@ export const SuggestedUser = ({ user }: SuggestedUserProps) => {
     <Grid alignItems="center" justifyContent="space-between" container>
       <Stack alignItems="center" spacing={2} direction="row">
         <Avatar sx={{ width: 30, height: 30 }} user={user} />
-        <Link href={`/${user.username}`} underline="hover" color="text.primary">
-          <Typography fontWeight={600} fontSize="14px" variant="body1">
+        <Link
+          sx={{ maxWidth: '130px' }}
+          href={`/${user.username}`}
+          underline="hover"
+          color="text.primary"
+        >
+          <Typography noWrap fontWeight={600} fontSize="14px" variant="body1">
             {user.username}
           </Typography>
         </Link>

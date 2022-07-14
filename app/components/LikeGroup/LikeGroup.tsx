@@ -83,14 +83,24 @@ export const LikeGroup = ({ users, ...props }: LikeGroupProps) => {
   return users.length > 0 ? (
     <Grid container alignItems="center" spacing={1}>
       <Grid item>
-        <AvatarGroup spacing="small" {...props}>
+        <AvatarGroup
+          sx={{
+            '.MuiAvatarGroup-avatar': {
+              height: 30,
+              width: 30,
+            },
+          }}
+          spacing="small"
+          max={4}
+          {...props}
+        >
           {users.map((user) => (
             <Link key={user.userId} href={`/${users[0].username}`}>
               <Tooltip title={user.username}>
                 <Avatar
                   src={user.profilePicture || undefined}
                   alt={user.username}
-                  sx={{ height: 25, width: 25 }}
+                  sx={{ height: 30, width: 30 }}
                 />
               </Tooltip>
             </Link>

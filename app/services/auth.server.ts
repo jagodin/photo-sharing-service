@@ -33,3 +33,7 @@ export const authenticateUser = async (request: Request) => {
   });
   return user;
 };
+
+export const isAuthenticatedForAPI = async (request: Request) => {
+  return request.headers.get('API-KEY') === process.env.API_KEY;
+};

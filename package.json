@@ -19,7 +19,7 @@
         "db-seed": "prisma db seed"
     },
     "prisma": {
-        "seed": "ts-node prisma/seed.ts"
+        "seed": "ts-node prisma/seedLocal.ts"
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.120.0",
@@ -36,6 +36,7 @@
         "@remix-run/server-runtime": "^1.6.0",
         "@types/morgan": "^1.9.3",
         "async": "^3.2.4",
+        "axios": "^0.27.2",
         "bcryptjs": "^2.4.3",
         "compression": "^1.7.4",
         "express": "4.17.3",

@@ -4,7 +4,7 @@ import path from 'path';
 
 export const handler: Handler = async (event, _) => {
   try {
-    const exitCode = await new Promise((resolve, _) => {
+    const migrateExitCode = await new Promise((resolve, _) => {
       execFile(
         path.resolve('./node_modules/prisma/build/index.js'),
         ['migrate', 'deploy'],
@@ -20,7 +20,9 @@ export const handler: Handler = async (event, _) => {
       );
     });
 
-    if (exitCode != 0) throw Error(`command failed with exit code ${exitCode}`);
+    if (migrateExitCode !== 0)
+      throw Error(`command failed with exit code ${migrateExitCode}`);
+    console.info('Database migration successful');
   } catch (e) {
     console.log(e);
     throw e;

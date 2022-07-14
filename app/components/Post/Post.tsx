@@ -55,6 +55,7 @@ export const Post = ({ post, currentUser }: PostProps) => {
               redirectAfterDelete="/"
               post={post}
               currentUser={currentUser}
+              redirectAfterEdit="/"
             />
           </Stack>
         }

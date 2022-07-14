@@ -40,6 +40,7 @@ export const Header = ({ post, currentUser }: HeaderProps) => {
           redirectAfterDelete={`/${post.author.username}`}
           post={post}
           currentUser={currentUser}
+          redirectAfterEdit={`/${post.author.username}/post/${post.postId}`}
         />
       </Stack>
     </Grid>

@@ -24,10 +24,7 @@ export const PostFooter = ({ post, currentUser }: FooterProps) => {
     <Grid container sx={{ padding: (theme) => theme.spacing(1, 2) }} rowGap={1}>
       <Stack alignItems="center" direction="row" spacing={1}>
         <FavoriteButton post={post} currentUser={currentUser} />
-        <LikeGroup
-          users={post.favorites.map((favorite) => favorite.user)}
-          max={3}
-        />
+        <LikeGroup users={post.favorites.map((favorite) => favorite.user)} />
       </Stack>
       <Grid item xs={12}>
         <Form method="post" action={`${baseUrl}/comment`}>
