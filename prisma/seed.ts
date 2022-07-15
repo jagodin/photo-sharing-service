@@ -1,6 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
 import async from 'async';
+import fs from 'fs';
 
 import { createPosts, createUsers } from './data';
 
@@ -17,11 +18,15 @@ export const seed = async () => {
     }
   );
 
-  await async.map(
-    userIds,
-    async (userId: number) =>
-      await prisma.post.createMany({ data: await createPosts(userId) })
-  );
+  const postUrls = JSON.parse(
+    fs.readFileSync('./prisma/data/photos.json', 'utf-8')
+  ) as string[];
+
+  await async.map(userIds, async (userId: number) => {
+    await prisma.post.createMany({
+      data: await createPosts(userId, postUrls),
+    });
+  });
 
   const postIds = (
     await prisma.post.findMany({ select: { postId: true } })

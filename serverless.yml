@@ -90,6 +90,7 @@ functions:
     image:
       name: photo-sharing-service
     description: A simple Photo Sharing network built with Remix.
+    timeout: 120
     events:
         - httpApi:
               method: any
