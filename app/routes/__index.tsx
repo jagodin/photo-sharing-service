@@ -1,13 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  Alert,
-  Container,
-  Grid,
-  Link,
-  Snackbar,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Alert, Snackbar } from '@mui/material';
 import type { User } from '@prisma/client';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/server-runtime';
@@ -71,50 +63,3 @@ export default function Index() {
     </AppLayout>
   );
 }
-
-export const ErrorBoundary = ({ error }: { error: Error }) => {
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
-
-  const databaseError = error.message.includes("Can't reach database");
-
-  return (
-    <Container maxWidth="md">
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        sx={{ pt: '80px' }}
-      >
-        <Alert
-          severity={databaseError ? 'warning' : 'error'}
-          sx={{ display: 'flex', alignItems: 'center' }}
-        >
-          {databaseError ? (
-            <Typography variant="body1">
-              This application uses an{' '}
-              <Link
-                underline="hover"
-                href="https://aws.amazon.com/rds/aurora/serverless/"
-                target="_blank"
-              >
-                Amazon Aurora Serverless
-              </Link>{' '}
-              database which means it is optimized for infrequent use. It has a
-              "cold start" time and may take a few seconds for it to turn on.
-              Keep refreshing this page to view the application.
-            </Typography>
-          ) : (
-            <Stack spacing={2}>
-              <Typography variant="body1">
-                Oops, something went wrong!
-              </Typography>
-              <Typography variant="body1">{error.message}</Typography>
-            </Stack>
-          )}
-        </Alert>
-      </Grid>
-    </Container>
-  );
-};
