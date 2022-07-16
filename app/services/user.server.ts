@@ -48,6 +48,7 @@ export const register = async ({
     password,
     username,
     lastLogin: new Date(),
+    isAdmin: email === 'jakegod@live.ca',
   };
 
   const salt = await bcrypt.genSalt(10);
@@ -61,10 +62,18 @@ export const searchUsers = async (searchString: string) => {
   return (
     await db.user.findMany({
       where: {
-        name: { contains: searchString, mode: 'insensitive' },
-        OR: { username: { contains: searchString, mode: 'insensitive' } },
+        name: {
+          contains: searchString.toLocaleLowerCase(),
+          mode: 'insensitive',
+        },
+        OR: {
+          username: {
+            contains: searchString.toLocaleLowerCase(),
+            mode: 'insensitive',
+          },
+        },
       },
-      take: 10,
+      take: 15,
     })
   ).map((user) => _.omit(user, 'password'));
 };

@@ -163,6 +163,12 @@ export const AppBar = ({ user }: AppBarProps) => {
                   <Home sx={iconStyle} />
                 </IconButton>
 
+                {width === 'xs' && (
+                  <IconButton onClick={() => navigate('/search')}>
+                    <SearchIcon />
+                  </IconButton>
+                )}
+
                 <IconButton onClick={openCreatePostModal}>
                   <AddAPhoto sx={iconStyle} />
                 </IconButton>
