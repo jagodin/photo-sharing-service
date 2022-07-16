@@ -34,10 +34,18 @@ export const register = async ({
   lastName,
   username,
 }: RegisterOptions) => {
-  const user = await db.user.findUnique({ where: { email } });
+  let user = await db.user.findUnique({ where: { email } });
 
   if (user) {
-    throw new Response('A user already exists with this email', {
+    throw new Response('A user already exists with this email.', {
+      status: 400,
+    });
+  }
+
+  user = await db.user.findUnique({ where: { username } });
+
+  if (user) {
+    throw new Response('A user already exists with this username.', {
       status: 400,
     });
   }

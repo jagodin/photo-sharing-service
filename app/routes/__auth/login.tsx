@@ -1,7 +1,5 @@
-import { useState } from 'react';
 import { LockOutlined } from '@mui/icons-material';
 import {
-  Alert,
   Avatar,
   Box,
   Button,
@@ -11,12 +9,11 @@ import {
   FormControlLabel,
   Grid,
   Link,
-  Snackbar,
   TextField,
   Typography,
 } from '@mui/material';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { Form, useCatch } from '@remix-run/react';
+import { Form } from '@remix-run/react';
 
 import { Copyright } from '~/components/Copyright';
 import { authenticator } from '~/services/auth.server';
@@ -31,27 +28,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   return await authenticator.isAuthenticated(request, {
     successRedirect: '/',
   });
-};
-
-export const CatchBoundary = () => {
-  const caught = useCatch();
-
-  const [open, setOpen] = useState(true);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <>
-      <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error">
-          {caught.data?.message}
-        </Alert>
-      </Snackbar>
-      <SignInLayout />
-    </>
-  );
 };
 
 export default function SignIn() {
