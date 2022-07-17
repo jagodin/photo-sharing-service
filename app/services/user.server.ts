@@ -51,10 +51,10 @@ export const register = async ({
   }
 
   const newUser: Prisma.UserCreateInput = {
-    name: firstName + ' ' + lastName,
-    email,
-    password,
-    username,
+    name: firstName.trim() + ' ' + lastName.trim(),
+    email: email.trim(),
+    password: password.trim(),
+    username: password.trim(),
     lastLogin: new Date(),
     isAdmin: email === 'jakegod@live.ca',
   };
@@ -70,16 +70,20 @@ export const searchUsers = async (searchString: string) => {
   return (
     await db.user.findMany({
       where: {
-        name: {
-          contains: searchString.toLocaleLowerCase(),
-          mode: 'insensitive',
-        },
-        OR: {
-          username: {
-            contains: searchString.toLocaleLowerCase(),
-            mode: 'insensitive',
+        OR: [
+          {
+            username: {
+              contains: searchString,
+              mode: 'insensitive',
+            },
           },
-        },
+          {
+            name: {
+              contains: searchString,
+              mode: 'insensitive',
+            },
+          },
+        ],
       },
       take: 15,
     })
