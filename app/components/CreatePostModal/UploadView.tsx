@@ -1,18 +1,32 @@
 import type { ChangeEvent } from 'react';
+import { useState } from 'react';
 import { Upload } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
-import { Grid, Typography } from '@mui/material';
+import { Alert, Grid, Snackbar, Typography } from '@mui/material';
 import { Form, useLocation, useSubmit, useTransition } from '@remix-run/react';
 
 export const UploadView = () => {
   const submit = useSubmit();
   const transition = useTransition();
+  const [alertOpen, setAlertOpen] = useState(false);
 
   const { pathname } = useLocation();
 
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
-    submit(e.currentTarget);
+    const formData = new FormData(e.currentTarget);
+    const post = formData.get('post') as File;
+    if (post.size > 10 * 1048576) {
+      setAlertOpen(true);
+      e.currentTarget.reset();
+    } else {
+      submit(e.currentTarget);
+    }
   };
+
+  const closeAlert = () => {
+    setAlertOpen(false);
+  };
+
   return (
     <Grid
       container
@@ -22,6 +36,11 @@ export const UploadView = () => {
       rowGap={3}
       sx={{ padding: (theme) => theme.spacing(8, 0) }}
     >
+      <Snackbar open={alertOpen} onClose={closeAlert} autoHideDuration={4000}>
+        <Alert onClose={closeAlert} severity="error">
+          File size too large! Max size is 10 MB.
+        </Alert>
+      </Snackbar>
       <Grid item xs={12}>
         <Typography textAlign="center" variant="h5">
           Upload a photo from your device.

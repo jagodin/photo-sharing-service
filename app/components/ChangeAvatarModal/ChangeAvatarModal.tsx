@@ -1,13 +1,16 @@
 import type { ChangeEvent } from 'react';
+import { useState } from 'react';
 import { Upload } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
+  Alert,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
+  Snackbar,
 } from '@mui/material';
 import type { User } from '@prisma/client';
 import { Form, useSubmit, useTransition } from '@remix-run/react';
@@ -29,13 +32,30 @@ export const ChangeAvatarModal = ({
 }: ChangeAvatarModalProps) => {
   const submit = useSubmit();
   const transition = useTransition();
+  const [alertOpen, setAlertOpen] = useState(false);
 
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
-    submit(e.currentTarget);
+    const formData = new FormData(e.currentTarget);
+    const post = formData.get('avatar') as File;
+    if (post.size > 10 * 1048576) {
+      setAlertOpen(true);
+      e.currentTarget.reset();
+    } else {
+      submit(e.currentTarget);
+    }
+  };
+
+  const closeAlert = () => {
+    setAlertOpen(false);
   };
 
   return (
     <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose}>
+      <Snackbar open={alertOpen} onClose={closeAlert} autoHideDuration={4000}>
+        <Alert onClose={closeAlert} severity="error">
+          File size too large! Max size is 10 MB.
+        </Alert>
+      </Snackbar>
       <DialogTitle>Change Avatar</DialogTitle>
       <DialogContent dividers>
         <Grid container direction="column" alignItems="center" spacing={3}>

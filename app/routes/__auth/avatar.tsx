@@ -1,11 +1,14 @@
 import type { ChangeEvent } from 'react';
+import { useState } from 'react';
 import { Upload } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
+  Alert,
   Avatar as MuiAvatar,
   Button,
   Container,
   Grid,
+  Snackbar,
   Stack,
   Typography,
 } from '@mui/material';
@@ -106,19 +109,36 @@ export default function Avatar() {
   const submit = useSubmit();
   const transition = useTransition();
   const navigate = useNavigate();
+  const [alertOpen, setAlertOpen] = useState(false);
 
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
-    submit(e.currentTarget);
+    const formData = new FormData(e.currentTarget);
+    const post = formData.get('avatar') as File;
+    if (post.size > 10 * 1048576) {
+      setAlertOpen(true);
+      e.currentTarget.reset();
+    } else {
+      submit(e.currentTarget);
+    }
   };
 
   const handleSkip = () => {
     navigate('/');
   };
 
+  const closeAlert = () => {
+    setAlertOpen(false);
+  };
+
   const uploadLoading = transition.state !== 'idle';
 
   return (
     <Container maxWidth="xs">
+      <Snackbar open={alertOpen} onClose={closeAlert} autoHideDuration={4000}>
+        <Alert onClose={closeAlert} severity="error">
+          File size too large! Max size is 10 MB.
+        </Alert>
+      </Snackbar>
       <Grid
         container
         spacing={2}

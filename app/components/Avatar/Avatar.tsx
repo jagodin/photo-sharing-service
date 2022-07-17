@@ -12,7 +12,9 @@ export const Avatar = ({ user, sx, ...rest }: AvatarProps) => {
   return (
     <MuiAvatar
       onClick={() => navigate(`/${user?.username}`)}
-      src={user?.profilePicture || undefined}
+      src={
+        user?.profilePicture + '?w=164&h=164&fit=crop&auto=format' || undefined
+      }
       sx={{
         '&:hover': {
           cursor: 'pointer',
