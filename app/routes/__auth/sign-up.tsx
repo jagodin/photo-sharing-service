@@ -1,8 +1,8 @@
 import { LockOutlined } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
 import {
   Avatar,
   Box,
-  Button,
   Container,
   CssBaseline,
   Grid,
@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Form } from '@remix-run/react';
+import { Form, useTransition } from '@remix-run/react';
 import type { ActionFunction, LoaderFunction } from '@remix-run/server-runtime';
 
 import { Copyright } from '~/components/Copyright';
@@ -41,6 +41,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function SignUp() {
+  const transition = useTransition();
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -113,14 +114,15 @@ export default function SignUp() {
               />
             </Grid>
           </Grid>
-          <Button
+          <LoadingButton
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            loading={transition.state !== 'idle'}
           >
             Sign Up
-          </Button>
+          </LoadingButton>
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link href="/login" variant="body2">

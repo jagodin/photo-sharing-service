@@ -1,8 +1,8 @@
 import { LockOutlined } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
 import {
   Avatar,
   Box,
-  Button,
   Checkbox,
   Container,
   CssBaseline,
@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { Form } from '@remix-run/react';
+import { Form, useTransition } from '@remix-run/react';
 
 import { Copyright } from '~/components/Copyright';
 import { authenticator } from '~/services/auth.server';
@@ -35,6 +35,7 @@ export default function SignIn() {
 }
 
 const SignInLayout = () => {
+  const transition = useTransition();
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -77,14 +78,15 @@ const SignInLayout = () => {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <Button
+          <LoadingButton
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            loading={transition.state !== 'idle'}
           >
             Sign In
-          </Button>
+          </LoadingButton>
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">

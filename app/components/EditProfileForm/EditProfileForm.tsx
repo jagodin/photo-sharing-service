@@ -14,6 +14,7 @@ import { Form } from '@remix-run/react';
 import { Avatar } from '../Avatar';
 import { ChangeAvatarModal } from '../ChangeAvatarModal';
 
+import { useWidth } from '~/hooks/useWidth';
 import type { ValidationError } from '~/services/user.server';
 
 interface EditProfileFormProps {
@@ -34,6 +35,7 @@ export const EditProfileForm = ({
   );
   const [username, setUsername] = useState(user.username);
   const [changeAvatarOpen, setChangeAvatarOpen] = useState(false);
+  const width = useWidth();
 
   const changeName = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -69,7 +71,11 @@ export const EditProfileForm = ({
           <Stack direction="row" spacing={2} alignItems="center">
             <Avatar user={user} onClick={undefined} />
             <Typography variant="h5">{user.username}</Typography>
-            <Button onClick={openChangeAvatar} variant="outlined">
+            <Button
+              onClick={openChangeAvatar}
+              variant="outlined"
+              size={width === 'xs' ? 'small' : 'medium'}
+            >
               Change Avatar
             </Button>
             <ChangeAvatarModal

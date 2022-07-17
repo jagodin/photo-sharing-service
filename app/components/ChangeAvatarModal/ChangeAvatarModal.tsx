@@ -76,6 +76,7 @@ export const ChangeAvatarModal = ({
         </Grid>
       </DialogContent>
       <DialogActions>
+        <Button onClick={onClose}>Close</Button>
         <Form method="post">
           <input hidden readOnly name="avatar" value={uploadedAvatar} />
           <input hidden readOnly name="action" value="saveAvatar" />
@@ -90,7 +91,6 @@ export const ChangeAvatarModal = ({
             Save
           </LoadingButton>
         </Form>
-        <Button onClick={onClose}>Close</Button>
       </DialogActions>
     </Dialog>
   );
