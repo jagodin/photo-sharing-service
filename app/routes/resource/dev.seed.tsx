@@ -18,6 +18,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     return json({ success: true });
   } else {
-    return new Response('Unauthorized to access this route.', { status: 404 });
+    return new Response('Unauthorized to access this route.', { status: 401 });
   }
 };

@@ -56,7 +56,6 @@ export const register = async ({
     password: password.trim(),
     username: password.trim(),
     lastLogin: new Date(),
-    isAdmin: email === 'jakegod@live.ca',
   };
 
   const salt = await bcrypt.genSalt(10);
