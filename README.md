@@ -16,7 +16,7 @@ cp .env.example .env # Fill in environment variables with appropriate values
 yarn run dev
 ```
 
-The application will then be available at http://localhost:3000/. Use the login credentials provided by the seed output or create a new user by navigating to http://localhost:3000/sign-up.
+The application will then be available at http://localhost:3000/. Use the login credentials provided by the seed output or create a new user by navigating to http://localhost:3000/sign-up. Note that you will first have to deploy the application for the development S3 bucket to be created.
 
 ## Deploy
 
