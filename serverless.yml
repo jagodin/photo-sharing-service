@@ -11,21 +11,6 @@ variablesResolutionMode: 20210326
 
 custom:
     photosBucketName: ${env:S3_BUCKET_NAME}
-    dev:
-        HOST: ${env:DEV_HOST}
-    # prod:
-    #     HOST: my-domain.com # replace with your production url
-    # serverless-esbuild config, bundles your code and allows you to use typescript or es-next features in your handler code
-    # esbuild:
-    #     bundle: true
-    #     minify: false
-    #     sourcemap: true
-    #     sourcesContent: false
-    #     exclude: ['aws-sdk']
-    #     target: 'node14'
-    #     define:
-    #         'require.resolve': null
-    #     platform: 'node'
     # serverless-s3-sync config, handles uploading static files to S3
     s3Sync:
         buckets:
@@ -67,7 +52,7 @@ provider:
         S3_SECRET_ACCESS_KEY: ${env:S3_SECRET_ACCESS_KEY}
         S3_REGION: ${env:S3_REGION}
         S3_BUCKET_NAME: !Ref PhotosBucket
-        DEV_HOST: !GetAtt 'CDN.DomainName'
+        HOST: !GetAtt 'CDN.DomainName'
         API_KEY: ${env:API_KEY}
     lambdaHashingVersion: '20201221'
     ecr:
@@ -218,9 +203,9 @@ resources:
                                     - '.execute-api.${self:provider.region}.amazonaws.com'
                           Id: RemixOrigin
                           # UNCOMMENT THIS TO SET THE X-Forwarded-Host header for API Gateway
-                          OriginCustomHeaders:
-                            - HeaderName: X-Forwarded-Host
-                              HeaderValue: ${self:provider.stage}.HOST
+                        #   OriginCustomHeaders:
+                        #     - HeaderName: X-Forwarded-Host
+                        #       HeaderValue: ${env:HOST}
                           CustomOriginConfig:
                               OriginProtocolPolicy: https-only
                               OriginSSLProtocols: [TLSv1.2]
